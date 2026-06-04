@@ -3,307 +3,165 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>THE LEGEND OF THE FUTURE JAMES'S CREATION · Ultimate Math Predictor v5.9</title>
-  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest">
-  </script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js">
-  </script>
+  <title>THE LEGEND OF THE FUTURE JAMES'S CREATION · Ultimate Math Predictor v6.0</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --bg: #0a0a1a;
-      --glass-bg: rgba(10, 10, 30, 0.82);
-      --glass-border: rgba(0, 255, 255, 0.18);
-      --neon-cyan: #00f0ff;
-      --neon-magenta: #ff00c8;
-      --neon-yellow: #ffe600;
-      --neon-green: #00ff88;
-      --neon-orange: #ff6b35;
-      --neon-blue: #007bff;
-      --neon-red: #ff2244;
-      --text: #e2e8f0;
-      --muted: #94a3b8;
-      --card-bg: rgba(15, 15, 42, 0.7);
-      --win-color: #00cfff;
-      --win-border: rgba(0, 207, 255, 0.6);
-      --loss-color: #ff2244;
-      --loss-border: rgba(255, 34, 68, 0.6);
-      --pending-color: #ffe600;
-      --pending-border: rgba(255, 230, 0, 0.6);
-      --half-win-color: #ff8800;
-      --half-win-border: rgba(255, 136, 0, 0.6);
-    }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      background: #0a0a1a;
-      background-image: radial-gradient(ellipse at 20% 50%, rgba(0, 255, 255, 0.08) 0%, transparent 50%),
-        radial-gradient(ellipse at 80% 20%, rgba(255, 0, 200, 0.04) 0%, transparent 50%);
-      min-height: 100vh; display: flex; justify-content: center; align-items: flex-start; padding: 10px;
-      font-family: 'Rajdhani', sans-serif; color: var(--text);
-    }
-    .main-container {
-      max-width: 1400px; width: 100%; background: var(--glass-bg); backdrop-filter: blur(20px);
-      border: 1px solid var(--glass-border); border-radius: 24px; padding: 1rem;
-      box-shadow: 0 0 40px rgba(0, 255, 255, 0.08); position: relative; overflow: hidden;
-    }
-    .main-container::before {
-      content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-      background: conic-gradient(from 0deg, transparent, rgba(0, 255, 255, 0.015), transparent, rgba(255, 0, 200, 0.01), transparent);
-      animation: rotateGlow 20s linear infinite; z-index: -1;
-    }
-    @keyframes rotateGlow { to { transform: rotate(360deg); } }
-    h1, h2, h3, h4 { font-family: 'Orbitron', sans-serif; letter-spacing: 2px; }
-    h1 {
-      text-align: center; font-size: 1.2rem; font-weight: 900;
-      background: linear-gradient(135deg, var(--neon-cyan), var(--neon-magenta));
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-    }
-    .subtitle { text-align: center; color: var(--neon-cyan); font-size: 0.6rem; letter-spacing: 3px; margin-bottom: 0.3rem; }
-    .section { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(0, 255, 255, 0.1); border-radius: 14px; padding: 0.7rem; margin-bottom: 0.6rem; }
-    .input-row { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; margin: 0.2rem 0; }
-    .input-group label { display: block; font-size: 0.45rem; color: var(--neon-cyan); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.1rem; }
-    .input-group select, .input-group input, .input-group textarea {
-      padding: 0.35rem 0.6rem; border: 1px solid rgba(0, 255, 255, 0.2); border-radius: 10px;
-      background: rgba(0, 0, 0, 0.6); color: white; font-family: 'Rajdhani', sans-serif; font-size: 0.7rem;
-    }
-    .input-group select:focus, .input-group input:focus { outline: none; border-color: var(--neon-cyan); box-shadow: 0 0 8px rgba(0, 240, 255, 0.2); }
-    button {
-      padding: 0.35rem 0.8rem; border: none; border-radius: 40px; font-weight: 600;
-      font-family: 'Orbitron', sans-serif; letter-spacing: 1px; cursor: pointer; transition: all 0.2s;
-      text-transform: uppercase; font-size: 0.55rem; background: rgba(0, 0, 0, 0.4); color: white;
-      border: 1px solid rgba(0, 255, 255, 0.25);
-    }
-    button:hover { transform: translateY(-2px); box-shadow: 0 0 12px rgba(0, 240, 255, 0.3); }
-    .btn-primary { background: linear-gradient(135deg, #0097a7, #00bcd4); border: none; color: #fff; }
-    .btn-success { background: linear-gradient(135deg, #059669, #10b981); border: none; color: #fff; }
-    .btn-warning { background: linear-gradient(135deg, #d97706, #f59e0b); border: none; color: #000; }
-    .btn-danger { background: linear-gradient(135deg, #dc2626, #ef4444); border: none; color: #fff; }
-    .btn-refresh { background: linear-gradient(135deg, #7c3aed, #a78bfa); border: none; color: #fff; animation: pulseBtn 2s infinite; }
-    @keyframes pulseBtn { 0%, 100% { box-shadow: 0 0 8px rgba(167, 139, 250, 0.4); } 50% { box-shadow: 0 0 20px rgba(167, 139, 250, 0.8); } }
-    .btn-sm { padding: 0.2rem 0.5rem; font-size: 0.5rem; }
-    .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(0, 255, 255, 0.2); border-top-color: var(--neon-cyan); border-radius: 50%; animation: spin 0.8s linear infinite; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .page-menu { display: flex; gap: 0.4rem; margin-bottom: 0.6rem; flex-wrap: wrap; }
-    .page-menu-btn {
-      padding: 0.4rem 1rem; border-radius: 30px; border: 1px solid var(--neon-cyan);
-      background: transparent; color: var(--neon-cyan); font-family: 'Orbitron'; font-size: 0.6rem; cursor: pointer;
-    }
-    .page-menu-btn.active { background: rgba(0, 255, 255, 0.15); box-shadow: 0 0 12px rgba(0, 255, 255, 0.2); }
-    .hidden { display: none !important; }
-    .api-status { display: inline-block; padding: 0.1rem 0.4rem; border-radius: 20px; font-size: 0.45rem; font-weight: 600; }
-    .api-connected { background: rgba(0, 255, 136, 0.1); color: var(--neon-green); border: 1px solid var(--neon-green); }
-    .api-error { background: rgba(255, 68, 68, 0.1); color: #ff6666; border: 1px solid #ff4444; }
-    .live-indicator { display: inline-block; width: 6px; height: 6px; background: var(--neon-green); border-radius: 50%; animation: pulse 1.5s infinite; margin-right: 4px; }
-    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-    .logout-btn { position: absolute; top: 8px; right: 12px; background: rgba(0, 0, 0, 0.6); border: 1px solid rgba(255, 0, 200, 0.4); color: white; padding: 3px 10px; border-radius: 30px; font-family: 'Orbitron'; font-size: 0.45rem; cursor: pointer; z-index: 200; }
-    .user-badge { display: inline-flex; align-items: center; gap: 5px; background: rgba(0, 255, 255, 0.08); border: 1px solid rgba(0, 255, 255, 0.2); padding: 0.15rem 0.5rem; border-radius: 30px; font-size: 0.5rem; }
-    .teams-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin: 0.4rem 0; }
-    @media(max-width:800px) { .teams-grid { grid-template-columns: 1fr; } }
-    .team-card { background: var(--card-bg); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 16px; padding: 0.7rem; }
-    .team-card select { width: 100%; padding: 0.4rem; border-radius: 12px; background: rgba(0, 0, 0, 0.6); border: 1px solid rgba(255, 255, 255, 0.15); color: white; font-size: 0.75rem; }
-    .stat-row { display: flex; gap: 0.3rem; margin: 0.3rem 0; flex-wrap: wrap; }
-    .stat-item { flex: 1; min-width: 55px; text-align: center; background: rgba(0, 0, 0, 0.3); border-radius: 8px; padding: 0.2rem; }
-    .stat-item label { font-size: 0.4rem; color: var(--neon-cyan); }
-    .stat-item .val { font-size: 0.7rem; font-weight: 700; font-family: 'Orbitron'; }
-    .elo-display { color: var(--neon-yellow); font-weight: bold; font-family: 'Orbitron'; font-size: 0.8rem; margin-top: 0.3rem; text-align: center; }
-    .results-grid { display: flex; flex-direction: column; gap: 1.2rem; margin-top: 0.8rem; }
-    .model-card { background: rgba(0, 0, 0, 0.45); backdrop-filter: blur(8px); border-radius: 18px; border: 1px solid rgba(0, 255, 255, 0.2); padding: 0.9rem; transition: 0.2s; }
-    .model-card.ensemble { border-color: var(--neon-yellow); box-shadow: 0 0 16px rgba(255, 230, 0, 0.1); }
-    .top-scores { display: flex; gap: 0.6rem; margin: 0.6rem 0; flex-wrap: wrap; }
-    .score-badge { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--neon-magenta); border-radius: 12px; padding: 0.4rem 0.6rem; text-align: center; min-width: 70px; }
-    .score-badge strong { font-size: 1rem; }
-    .score-badge small { font-size: 0.55rem; color: var(--muted); }
-    .outcome-row { display: flex; justify-content: space-around; margin: 0.7rem 0; flex-wrap: wrap; gap: 0.5rem; }
-    .outcome-item { text-align: center; min-width: 70px; }
-    .outcome-item .label { color: var(--muted); font-size: 0.5rem; }
-    .outcome-item .value { font-weight: 800; font-size: 0.9rem; font-family: 'Orbitron'; }
-    .prob-table { width: 100%; font-size: 0.7rem; border-collapse: collapse; }
-    .prob-table td { padding: 0.2rem; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
-    .prob-bar { height: 4px; background: linear-gradient(90deg, var(--neon-cyan), var(--neon-magenta)); border-radius: 2px; display: inline-block; }
-    .heatmap-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 4px; max-width: 480px; margin: 0.8rem auto; }
-    .heatmap-cell { aspect-ratio: 1; font-size: 0.55rem; display: flex; align-items: center; justify-content: center; border-radius: 8px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(0, 255, 255, 0.2); cursor: pointer; font-weight: bold; }
-    .heatmap-cell:hover { transform: scale(1.05); border-color: var(--neon-cyan); }
-    .betting-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 0.4rem; margin-top: 0.3rem; }
-    .betting-card { background: rgba(0, 0, 0, 0.3); border-radius: 12px; padding: 0.3rem; text-align: center; border: 1px solid rgba(255, 255, 255, 0.05); }
-    .betting-card.highlight { border-color: var(--neon-green); background: rgba(0, 255, 136, 0.05); }
-    .tab-content { display: none; }
-    .tab-content.active { display: block; }
-    .tabs-nav { display: flex; gap: 0.3rem; border-bottom: 1px solid rgba(0, 255, 255, 0.2); padding-bottom: 0.2rem; margin-bottom: 0.5rem; flex-wrap: wrap; }
-    .tab-nav-btn { background: transparent; border: none; padding: 0.25rem 0.6rem; font-family: 'Orbitron'; font-weight: 600; color: var(--muted); cursor: pointer; font-size: 0.55rem; }
-    .tab-nav-btn.active { color: var(--neon-cyan); border-bottom: 2px solid var(--neon-cyan); }
-    .saved-league-item { display: inline-block; padding: 0.2rem 0.5rem; margin: 0.1rem; border-radius: 20px; background: rgba(0, 255, 255, 0.08); border: 1px solid rgba(0, 255, 255, 0.2); cursor: pointer; font-size: 0.5rem; }
-    .note { text-align: center; color: #64748b; font-size: 0.5rem; margin-top: 0.8rem; }
-    .market-section-title { font-size: 0.65rem; color: var(--neon-cyan); text-align: center; margin: 0.4rem 0; }
-    .fixture-item { background: rgba(0, 0, 0, 0.35); border: 1px solid rgba(0, 255, 255, 0.12); border-radius: 18px; padding: 0.8rem; margin-bottom: 0.7rem; }
-    .fixture-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
-    .fixture-date { font-size: 0.5rem; color: var(--muted); margin-top: 0.2rem; }
-    .history-page-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.8rem; }
-    .search-bar { flex: 1; min-width: 180px; padding: 0.4rem 0.8rem; border-radius: 40px; background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(0, 255, 255, 0.25); color: white; font-family: 'Rajdhani'; font-size: 0.75rem; outline: none; }
-    .search-bar:focus { border-color: var(--neon-cyan); box-shadow: 0 0 10px rgba(0, 240, 255, 0.2); }
-    .filter-strip { display: flex; gap: 0.3rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
-    .filter-btn { padding: 0.2rem 0.55rem; border-radius: 20px; border: 1px solid rgba(0, 255, 255, 0.2); background: transparent; color: var(--muted); font-family: 'Rajdhani'; font-size: 0.6rem; cursor: pointer; transition: all 0.2s; }
-    .filter-btn.active { background: rgba(0, 255, 255, 0.12); color: var(--neon-cyan); border-color: var(--neon-cyan); }
-    .sort-select { padding: 0.25rem 0.5rem; border-radius: 20px; background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(0, 255, 255, 0.2); color: white; font-family: 'Rajdhani'; font-size: 0.6rem; }
-    @keyframes cardReveal { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-    @keyframes neonPulse { 0%, 100% { box-shadow: 0 0 6px var(--win-border); } 50% { box-shadow: 0 0 18px var(--win-border), 0 0 30px rgba(0, 207, 255, 0.3); } }
-    @keyframes neonPulseRed { 0%, 100% { box-shadow: 0 0 6px var(--loss-border); } 50% { box-shadow: 0 0 18px var(--loss-border), 0 0 30px rgba(255, 34, 68, 0.3); } }
-    @keyframes neonPulseYellow { 0%, 100% { box-shadow: 0 0 6px var(--pending-border); } 50% { box-shadow: 0 0 18px var(--pending-border), 0 0 30px rgba(255, 230, 0, 0.3); } }
-    @keyframes neonPulseOrange { 0%, 100% { box-shadow: 0 0 6px var(--half-win-border); } 50% { box-shadow: 0 0 18px var(--half-win-border), 0 0 30px rgba(255, 136, 0, 0.3); } }
-    .history-card { background: rgba(8, 8, 24, 0.85); backdrop-filter: blur(16px); border-radius: 20px; border: 1px solid rgba(0, 255, 255, 0.15); padding: 0.9rem; margin-bottom: 0.8rem; animation: cardReveal 0.4s ease both; transition: transform 0.2s, box-shadow 0.2s; position: relative; overflow: hidden; }
-    .history-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent); opacity: 0.5; }
-    .history-card:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0, 255, 255, 0.1); }
-    .history-card.win-card { border-color: var(--win-border); animation: cardReveal 0.4s ease both, neonPulse 3s infinite; }
-    .history-card.loss-card { border-color: var(--loss-border); animation: cardReveal 0.4s ease both, neonPulseRed 3s infinite; }
-    .history-card.pending-card { border-color: var(--pending-border); animation: cardReveal 0.4s ease both, neonPulseYellow 3s infinite; }
-    .history-card.half-win-card { border-color: var(--half-win-border); animation: cardReveal 0.4s ease both, neonPulseOrange 3s infinite; }
-    .hcard-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 0.4rem; }
-    .hcard-league { font-size: 0.5rem; color: var(--neon-cyan); letter-spacing: 2px; text-transform: uppercase; font-family: 'Orbitron'; }
-    .hcard-datetime { font-size: 0.45rem; color: var(--muted); }
-    .hcard-teams { display: flex; align-items: center; justify-content: space-between; margin: 0.6rem 0; gap: 0.5rem; }
-    .hcard-team { display: flex; flex-direction: column; align-items: center; gap: 0.2rem; flex: 1; }
-    .hcard-team-logo { width: 36px; height: 36px; border-radius: 50%; background: rgba(0, 255, 255, 0.08); border: 1px solid rgba(0, 255, 255, 0.2); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; overflow: hidden; }
-    .hcard-team-name { font-size: 0.6rem; font-weight: 700; text-align: center; font-family: 'Orbitron'; max-width: 80px; }
-    .hcard-score-vs { display: flex; flex-direction: column; align-items: center; gap: 0.2rem; }
-    .hcard-vs { font-size: 0.5rem; color: var(--muted); }
-    .hcard-ft-score { font-family: 'Orbitron'; font-size: 1.2rem; font-weight: 900; color: white; text-shadow: 0 0 10px rgba(0, 255, 255, 0.5); }
-    .hcard-ft-score.win-score { color: var(--win-color); text-shadow: 0 0 10px rgba(0, 207, 255, 0.5); }
-    .hcard-ft-score.loss-score { color: var(--loss-color); text-shadow: 0 0 10px rgba(255, 34, 68, 0.5); }
-    .hcard-ft-score.half-win-score { color: var(--half-win-color); text-shadow: 0 0 10px rgba(255, 136, 0, 0.5); }
-    .status-badge { display: inline-flex; align-items: center; gap: 3px; padding: 0.15rem 0.5rem; border-radius: 20px; font-family: 'Orbitron'; font-size: 0.45rem; font-weight: 700; }
-    .badge-win { background: rgba(0, 207, 255, 0.12); color: var(--win-color); border: 1px solid var(--win-border); }
-    .badge-loss { background: rgba(255, 34, 68, 0.12); color: var(--loss-color); border: 1px solid var(--loss-border); }
-    .badge-pending { background: rgba(255, 230, 0, 0.12); color: var(--pending-color); border: 1px solid var(--pending-border); }
-    .badge-half-win { background: rgba(255, 136, 0, 0.12); color: var(--half-win-color); border: 1px solid var(--half-win-border); }
-    .badge-push { background: rgba(255, 230, 0, 0.08); color: #ccc; border: 1px solid rgba(255, 255, 255, 0.3); }
-    .market-results-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 0.35rem; margin: 0.5rem 0; }
-    .mkt-box { border-radius: 10px; padding: 0.3rem 0.4rem; text-align: center; border: 1px solid rgba(255, 255, 255, 0.08); background: rgba(0, 0, 0, 0.3); transition: all 0.3s; position: relative; overflow: hidden; }
-    .mkt-box.mkt-win { border-color: var(--win-border); background: rgba(0, 207, 255, 0.06); animation: neonPulse 2.5s infinite; }
-    .mkt-box.mkt-win .mkt-label { color: var(--win-color); }
-    .mkt-box.mkt-win .mkt-badge { background: var(--win-color); color: #000; }
-    .mkt-box.mkt-loss { border-color: var(--loss-border); background: rgba(255, 34, 68, 0.06); animation: neonPulseRed 2.5s infinite; }
-    .mkt-box.mkt-loss .mkt-label { color: var(--loss-color); }
-    .mkt-box.mkt-loss .mkt-badge { background: var(--loss-color); }
-    .mkt-box.mkt-pending { border-color: var(--pending-border); }
-    .mkt-box.mkt-pending .mkt-label { color: var(--pending-color); }
-    .mkt-box.mkt-half-win { border-color: var(--half-win-border); background: rgba(255, 136, 0, 0.06); animation: neonPulseOrange 2.5s infinite; }
-    .mkt-box.mkt-half-win .mkt-label { color: var(--half-win-color); }
-    .mkt-box.mkt-half-win .mkt-badge { background: var(--half-win-color); color: #000; }
-    .mkt-box.mkt-push { border-color: rgba(255, 255, 255, 0.3); background: rgba(255, 255, 255, 0.03); }
-    .mkt-box.mkt-push .mkt-label { color: #ccc; }
-    .mkt-box.mkt-push .mkt-badge { background: #888; color: #000; }
-    .mkt-label { font-size: 0.48rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
-    .mkt-prob { font-size: 0.55rem; font-family: 'Orbitron'; font-weight: 700; margin: 0.1rem 0; }
-    .mkt-badge { font-size: 0.38rem; padding: 0.08rem 0.3rem; border-radius: 20px; font-family: 'Orbitron'; font-weight: 900; display: inline-block; color: white; }
-    .cs-grid { display: flex; gap: 0.4rem; flex-wrap: wrap; margin: 0.4rem 0; }
-    .cs-box { border-radius: 10px; padding: 0.3rem 0.5rem; text-align: center; min-width: 55px; border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(0, 0, 0, 0.3); transition: all 0.3s; }
-    .cs-box.cs-hit { border-color: var(--win-border); background: rgba(0, 207, 255, 0.1); animation: neonPulse 2s infinite; }
-    .cs-box.cs-hit .cs-score { color: var(--win-color); }
-    .cs-box.cs-miss { border-color: var(--loss-border); background: rgba(255, 34, 68, 0.05); }
-    .cs-box.cs-miss .cs-score { color: var(--loss-color); }
-    .cs-score { font-family: 'Orbitron'; font-size: 0.8rem; font-weight: 900; }
-    .cs-pct { font-size: 0.4rem; color: var(--muted); }
-    .cs-result-badge { font-size: 0.38rem; padding: 0.06rem 0.25rem; border-radius: 20px; font-family: 'Orbitron'; font-weight: 900; margin-top: 0.1rem; display: inline-block; }
-    .ft-logger { display: flex; gap: 0.4rem; align-items: center; flex-wrap: wrap; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid rgba(0, 255, 255, 0.1); }
-    .ft-input { width: 45px; padding: 0.25rem; border-radius: 8px; background: rgba(0, 0, 0, 0.6); border: 1px solid rgba(0, 255, 255, 0.3); color: white; font-family: 'Orbitron'; font-size: 0.7rem; text-align: center; }
-    .hcard-notes { margin-top: 0.4rem; }
-    .notes-input { width: 100%; padding: 0.3rem 0.5rem; border-radius: 8px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.1); color: var(--muted); font-size: 0.6rem; resize: none; font-family: 'Rajdhani'; }
-    .hcard-meta { display: flex; justify-content: space-between; align-items: center; font-size: 0.4rem; color: var(--muted); margin-top: 0.4rem; flex-wrap: wrap; gap: 0.2rem; }
-    .expand-btn { background: transparent; border: none; color: var(--muted); cursor: pointer; font-size: 0.6rem; padding: 0.1rem 0.3rem; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.1); }
-    .expand-btn:hover { color: var(--neon-cyan); border-color: var(--neon-cyan); }
-    .hcard-details { overflow: hidden; transition: max-height 0.4s ease; max-height: 0; }
-    .hcard-details.expanded { max-height: 900px; }
-    .analytics-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 0.6rem; margin-bottom: 0.8rem; }
-    .analytics-card { background: rgba(0, 0, 0, 0.4); border-radius: 16px; border: 1px solid rgba(0, 255, 255, 0.15); padding: 0.7rem; text-align: center; transition: all 0.2s; position: relative; overflow: hidden; }
-    .analytics-card:hover { transform: translateY(-2px); box-shadow: 0 0 16px rgba(0, 255, 255, 0.1); }
-    .analytics-card::before { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent); }
-    .ac-icon { font-size: 1.2rem; margin-bottom: 0.2rem; }
-    .ac-value { font-family: 'Orbitron'; font-size: 1.1rem; font-weight: 900; color: var(--neon-cyan); }
-    .ac-value.win-val { color: var(--win-color); }
-    .ac-value.loss-val { color: var(--loss-color); }
-    .ac-value.half-val { color: var(--half-win-color); }
-    .ac-label { font-size: 0.42rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 0.1rem; }
-    .streak-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 0.6rem; margin-bottom: 0.8rem; }
-    .streak-card { background: rgba(0, 0, 0, 0.4); border-radius: 16px; padding: 0.7rem; text-align: center; border: 1px solid rgba(255, 230, 0, 0.2); animation: neonPulseYellow 4s infinite; }
-    .streak-card.win-streak { border-color: var(--win-border); animation: neonPulse 4s infinite; }
-    .streak-card.loss-streak { border-color: var(--loss-border); animation: neonPulseRed 4s infinite; }
-    .streak-card.half-streak { border-color: var(--half-win-border); animation: neonPulseOrange 4s infinite; }
-    .streak-val { font-family: 'Orbitron'; font-size: 1.5rem; font-weight: 900; color: var(--neon-yellow); }
-    .streak-card.win-streak .streak-val { color: var(--win-color); }
-    .streak-card.loss-streak .streak-val { color: var(--loss-color); }
-    .streak-card.half-streak .streak-val { color: var(--half-win-color); }
-    .streak-label { font-size: 0.45rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
-    .progress-circle-wrap { display: flex; flex-direction: column; align-items: center; gap: 0.3rem; }
-    .progress-circle { width: 70px; height: 70px; position: relative; }
-    .progress-circle svg { transform: rotate(-90deg); width: 70px; height: 70px; }
-    .progress-circle .track { fill: none; stroke: rgba(255, 255, 255, 0.05); stroke-width: 6; }
-    .progress-circle .fill { fill: none; stroke-width: 6; stroke-linecap: round; transition: stroke-dashoffset 1s ease; }
-    .progress-circle-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-family: 'Orbitron'; font-size: 0.65rem; font-weight: 900; }
-    .chart-wrapper { background: rgba(0, 0, 0, 0.3); border-radius: 14px; padding: 0.6rem; margin-bottom: 0.5rem; border: 1px solid rgba(0, 255, 255, 0.08); }
-    .data-mgmt-row { display: flex; gap: 0.4rem; flex-wrap: wrap; justify-content: center; margin: 0.5rem 0; }
-    .modal-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(10px); z-index: 9999; display: flex; align-items: center; justify-content: center; }
-    .modal-box { background: rgba(10, 10, 30, 0.95); border: 1px solid rgba(0, 255, 255, 0.3); border-radius: 20px; padding: 1.5rem; max-width: 320px; width: 90%; text-align: center; animation: cardReveal 0.3s ease; }
-    .modal-box h3 { font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--neon-red); }
-    .modal-box p { font-size: 0.65rem; color: var(--muted); margin-bottom: 1rem; }
-    .modal-btns { display: flex; gap: 0.5rem; justify-content: center; }
-    .particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1; overflow: hidden; }
-    .particle { position: absolute; width: 2px; height: 2px; background: rgba(0, 255, 255, 0.4); border-radius: 50%; animation: float linear infinite; }
-    @keyframes float { 0% { transform: translateY(100vh) scale(0); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translateY(-10vh) scale(1); opacity: 0; } }
-    .toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 10000; display: flex; flex-direction: column; gap: 0.4rem; }
-    .toast { background: rgba(0, 0, 0, 0.85); border: 1px solid var(--neon-cyan); border-radius: 12px; padding: 0.5rem 1rem; font-size: 0.6rem; color: white; animation: cardReveal 0.3s ease; font-family: 'Rajdhani'; }
-    .toast.toast-success { border-color: var(--neon-green); color: var(--neon-green); }
-    .toast.toast-error { border-color: var(--neon-red); color: var(--neon-red); }
-    .api-source-selector { display: flex; gap: 0.3rem; flex-wrap: wrap; }
-    .api-source-btn { padding: 0.2rem 0.5rem; border-radius: 20px; border: 1px solid rgba(0, 255, 255, 0.2); background: transparent; color: var(--muted); font-family: 'Rajdhani'; font-size: 0.6rem; cursor: pointer; }
-    .api-source-btn.active { background: rgba(0, 255, 255, 0.12); color: var(--neon-cyan); border-color: var(--neon-cyan); }
-    .saved-leagues-section { margin: 0.3rem 0; }
-    .empty-history { text-align: center; padding: 2rem; color: var(--muted); font-size: 0.7rem; }
-    .empty-history .empty-icon { font-size: 2.5rem; margin-bottom: 0.5rem; display: block; }
-    .save-hist-btn { font-size: 0.48rem; padding: 0.2rem 0.5rem; border-radius: 20px; background: linear-gradient(135deg, rgba(0, 207, 255, 0.2), rgba(255, 0, 200, 0.1)); border: 1px solid rgba(0, 207, 255, 0.4); color: var(--win-color); cursor: pointer; font-family: 'Orbitron'; }
-    .db-status { display: inline-block; padding: 0.15rem 0.4rem; border-radius: 20px; font-size: 0.45rem; font-weight: 600; }
-    .db-ready { background: rgba(0, 255, 136, 0.1); color: var(--neon-green); border: 1px solid var(--neon-green); }
-    .db-not-ready { background: rgba(255, 68, 68, 0.1); color: #ff6666; border: 1px solid #ff4444; }
-    .asian-line-selector { display: flex; gap: 0.3rem; align-items: center; margin: 0.3rem 0; flex-wrap: wrap; }
-    .asian-line-btn { padding: 0.15rem 0.4rem; border-radius: 20px; border: 1px solid rgba(0, 255, 255, 0.2); background: transparent; color: var(--muted); font-size: 0.5rem; cursor: pointer; }
-    .asian-line-btn.active { background: rgba(0, 255, 255, 0.12); color: var(--neon-cyan); border-color: var(--neon-cyan); }
-    .primary-bet-indicator { display: inline-block; padding: 0.1rem 0.35rem; border-radius: 20px; font-size: 0.38rem; font-family: 'Orbitron'; font-weight: 900; background: rgba(255, 230, 0, 0.15); color: var(--neon-yellow); border: 1px solid var(--neon-yellow); margin-left: 4px; }
-    .auto-scan-status { background: rgba(0, 255, 136, 0.08); border: 1px solid var(--neon-green); border-radius: 20px; padding: 0.25rem 0.6rem; font-size: 0.5rem; color: var(--neon-green); display: inline-flex; align-items: center; gap: 4px; margin-left: 0.5rem; }
-    .auto-scan-status.scanning { border-color: var(--neon-yellow); color: var(--neon-yellow); animation: pulse 1.5s infinite; }
-    .auto-scan-status.complete { border-color: var(--neon-green); color: var(--neon-green); }
-    .predictions-page-card { background: rgba(0, 0, 0, 0.45); backdrop-filter: blur(8px); border-radius: 18px; border: 1px solid rgba(0, 255, 255, 0.2); padding: 0.9rem; margin-bottom: 0.7rem; transition: 0.2s; animation: cardReveal 0.4s ease both; }
-    .predictions-page-card:hover { border-color: var(--neon-cyan); box-shadow: 0 0 12px rgba(0, 255, 255, 0.1); }
-    .predictions-league-header { font-family: 'Orbitron'; font-size: 0.65rem; color: var(--neon-yellow); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 1px; }
-    .countdown-timer { font-family: 'Orbitron'; color: var(--neon-cyan); font-size: 0.7rem; text-align: center; margin: 0.3rem 0; }
-    .seq-progress { display: flex; gap: 0.3rem; flex-wrap: wrap; margin: 0.4rem 0; justify-content: center; }
-    .seq-dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.1); border: 1px solid rgba(0,255,255,0.2); position: relative; }
-    .seq-dot.done { background: var(--neon-green); border-color: var(--neon-green); }
-    .seq-dot.active { background: var(--neon-yellow); border-color: var(--neon-yellow); animation: pulse 1s infinite; }
-    .seq-dot.skipped { background: rgba(100,100,100,0.5); border-color: #666; }
-    .seq-dot::after { content: attr(data-league); position: absolute; bottom: -16px; left: 50%; transform: translateX(-50%); font-size: 0.35rem; color: var(--muted); white-space: nowrap; }
-    .prediction-match-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; padding: 0.4rem 0; border-bottom: 1px solid rgba(255,255,255,0.05); gap: 0.3rem; }
-    .prediction-match-row .team-names { font-size: 0.6rem; font-weight: 600; min-width: 140px; }
-    .prediction-match-row .match-date { font-size: 0.5rem; color: var(--muted); }
-    .prediction-match-row .primary-pick { font-size: 0.5rem; color: var(--neon-yellow); font-family: 'Orbitron'; }
-    .prediction-match-row .ah-info { font-size: 0.45rem; color: var(--half-win-color); }
-    .prediction-match-row .cs-top { font-size: 0.5rem; color: var(--neon-cyan); font-family: 'Orbitron'; }
-    .prediction-match-row .elo-info { font-size: 0.4rem; color: var(--muted); }
-    .refresh-bar { display: flex; justify-content: center; gap: 1rem; align-items: center; flex-wrap: wrap; padding: 0.5rem; background: rgba(124, 58, 237, 0.1); border-radius: 14px; margin-bottom: 0.6rem; border: 1px solid rgba(124, 58, 237, 0.3); }
-    .refresh-bar span { font-size: 0.55rem; color: var(--muted); }
-    @media(max-width:600px) { .analytics-grid { grid-template-columns: repeat(2, 1fr); } .streak-grid { grid-template-columns: repeat(2, 1fr); } .market-results-grid { grid-template-columns: repeat(3, 1fr); } .seq-dot::after { font-size: 0.28rem; bottom: -12px; } .prediction-match-row .team-names { min-width: 100px; font-size: 0.55rem; } }
+    :root{--bg:#0a0a1a;--glass-bg:rgba(10,10,30,0.82);--glass-border:rgba(0,255,255,0.18);--neon-cyan:#00f0ff;--neon-magenta:#ff00c8;--neon-yellow:#ffe600;--neon-green:#00ff88;--neon-orange:#ff6b35;--neon-blue:#007bff;--neon-red:#ff2244;--text:#e2e8f0;--muted:#94a3b8;--card-bg:rgba(15,15,42,0.7);--win-color:#00cfff;--win-border:rgba(0,207,255,0.6);--loss-color:#ff2244;--loss-border:rgba(255,34,68,0.6);--pending-color:#ffe600;--pending-border:rgba(255,230,0,0.6);--half-win-color:#ff8800;--half-win-border:rgba(255,136,0,0.6)}
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{background:#0a0a1a;background-image:radial-gradient(ellipse at 20% 50%,rgba(0,255,255,0.08) 0%,transparent 50%),radial-gradient(ellipse at 80% 20%,rgba(255,0,200,0.04) 0%,transparent 50%);min-height:100vh;display:flex;justify-content:center;align-items:flex-start;padding:10px;font-family:'Rajdhani',sans-serif;color:var(--text)}
+    .main-container{max-width:1400px;width:100%;background:var(--glass-bg);backdrop-filter:blur(20px);border:1px solid var(--glass-border);border-radius:24px;padding:1rem;box-shadow:0 0 40px rgba(0,255,255,0.08);position:relative;overflow:hidden}
+    .main-container::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:conic-gradient(from 0deg,transparent,rgba(0,255,255,0.015),transparent,rgba(255,0,200,0.01),transparent);animation:rotateGlow 20s linear infinite;z-index:-1}
+    @keyframes rotateGlow{to{transform:rotate(360deg)}}
+    h1,h2,h3,h4{font-family:'Orbitron',sans-serif;letter-spacing:2px}
+    h1{text-align:center;font-size:1.2rem;font-weight:900;background:linear-gradient(135deg,var(--neon-cyan),var(--neon-magenta));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .subtitle{text-align:center;color:var(--neon-cyan);font-size:0.6rem;letter-spacing:3px;margin-bottom:0.3rem}
+    .section{background:rgba(255,255,255,0.02);border:1px solid rgba(0,255,255,0.1);border-radius:14px;padding:0.7rem;margin-bottom:0.6rem}
+    .input-row{display:flex;gap:0.5rem;flex-wrap:wrap;align-items:center;margin:0.2rem 0}
+    .input-group label{display:block;font-size:0.45rem;color:var(--neon-cyan);text-transform:uppercase;letter-spacing:1px;margin-bottom:0.1rem}
+    .input-group select,.input-group input,.input-group textarea{padding:0.35rem 0.6rem;border:1px solid rgba(0,255,255,0.2);border-radius:10px;background:rgba(0,0,0,0.6);color:white;font-family:'Rajdhani',sans-serif;font-size:0.7rem}
+    button{padding:0.35rem 0.8rem;border:none;border-radius:40px;font-weight:600;font-family:'Orbitron',sans-serif;letter-spacing:1px;cursor:pointer;transition:all 0.2s;text-transform:uppercase;font-size:0.55rem;background:rgba(0,0,0,0.4);color:white;border:1px solid rgba(0,255,255,0.25)}
+    button:hover{transform:translateY(-2px);box-shadow:0 0 12px rgba(0,240,255,0.3)}
+    .btn-primary{background:linear-gradient(135deg,#0097a7,#00bcd4);border:none;color:#fff}
+    .btn-success{background:linear-gradient(135deg,#059669,#10b981);border:none;color:#fff}
+    .btn-warning{background:linear-gradient(135deg,#d97706,#f59e0b);border:none;color:#000}
+    .btn-danger{background:linear-gradient(135deg,#dc2626,#ef4444);border:none;color:#fff}
+    .btn-refresh{background:linear-gradient(135deg,#7c3aed,#a78bfa);border:none;color:#fff;animation:pulseBtn 2s infinite}
+    @keyframes pulseBtn{0%,100%{box-shadow:0 0 8px rgba(167,139,250,0.4)}50%{box-shadow:0 0 20px rgba(167,139,250,0.8)}}
+    .btn-sm{padding:0.2rem 0.5rem;font-size:0.5rem}
+    .spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(0,255,255,0.2);border-top-color:var(--neon-cyan);border-radius:50%;animation:spin 0.8s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .page-menu{display:flex;gap:0.4rem;margin-bottom:0.6rem;flex-wrap:wrap}
+    .page-menu-btn{padding:0.4rem 1rem;border-radius:30px;border:1px solid var(--neon-cyan);background:transparent;color:var(--neon-cyan);font-family:'Orbitron';font-size:0.6rem;cursor:pointer}
+    .page-menu-btn.active{background:rgba(0,255,255,0.15);box-shadow:0 0 12px rgba(0,255,255,0.2)}
+    .hidden{display:none!important}
+    .logout-btn{position:absolute;top:8px;right:12px;background:rgba(0,0,0,0.6);border:1px solid rgba(255,0,200,0.4);color:white;padding:3px 10px;border-radius:30px;font-family:'Orbitron';font-size:0.45rem;cursor:pointer;z-index:200}
+    .user-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(0,255,255,0.08);border:1px solid rgba(0,255,255,0.2);padding:0.15rem 0.5rem;border-radius:30px;font-size:0.5rem}
+    .teams-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;margin:0.4rem 0}
+    @media(max-width:800px){.teams-grid{grid-template-columns:1fr}}
+    .team-card{background:var(--card-bg);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:0.7rem}
+    .team-card select{width:100%;padding:0.4rem;border-radius:12px;background:rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.15);color:white;font-size:0.75rem}
+    .stat-row{display:flex;gap:0.3rem;margin:0.3rem 0;flex-wrap:wrap}
+    .stat-item{flex:1;min-width:55px;text-align:center;background:rgba(0,0,0,0.3);border-radius:8px;padding:0.2rem}
+    .stat-item label{font-size:0.4rem;color:var(--neon-cyan)}
+    .stat-item .val{font-size:0.7rem;font-weight:700;font-family:'Orbitron'}
+    .elo-display{color:var(--neon-yellow);font-weight:bold;font-family:'Orbitron';font-size:0.8rem;margin-top:0.3rem;text-align:center}
+    .results-grid{display:flex;flex-direction:column;gap:1.2rem;margin-top:0.8rem}
+    .model-card{background:rgba(0,0,0,0.45);backdrop-filter:blur(8px);border-radius:18px;border:1px solid rgba(0,255,255,0.2);padding:0.9rem}
+    .model-card.ensemble{border-color:var(--neon-yellow);box-shadow:0 0 16px rgba(255,230,0,0.1)}
+    .top-scores{display:flex;gap:0.6rem;margin:0.6rem 0;flex-wrap:wrap}
+    .score-badge{background:rgba(255,255,255,0.05);border:1px solid var(--neon-magenta);border-radius:12px;padding:0.4rem 0.6rem;text-align:center;min-width:70px}
+    .score-badge strong{font-size:1rem}.score-badge small{font-size:0.55rem;color:var(--muted)}
+    .outcome-row{display:flex;justify-content:space-around;margin:0.7rem 0;flex-wrap:wrap;gap:0.5rem}
+    .outcome-item{text-align:center;min-width:70px}
+    .outcome-item .label{color:var(--muted);font-size:0.5rem}
+    .outcome-item .value{font-weight:800;font-size:0.9rem;font-family:'Orbitron'}
+    .prob-table{width:100%;font-size:0.7rem;border-collapse:collapse}
+    .prob-table td{padding:0.2rem;border-bottom:1px solid rgba(255,255,255,0.1)}
+    .prob-bar{height:4px;background:linear-gradient(90deg,var(--neon-cyan),var(--neon-magenta));border-radius:2px;display:inline-block}
+    .heatmap-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:4px;max-width:480px;margin:0.8rem auto}
+    .heatmap-cell{aspect-ratio:1;font-size:0.55rem;display:flex;align-items:center;justify-content:center;border-radius:8px;background:rgba(255,255,255,0.03);border:1px solid rgba(0,255,255,0.2);cursor:pointer;font-weight:bold}
+    .heatmap-cell:hover{transform:scale(1.05);border-color:var(--neon-cyan)}
+    .betting-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:0.4rem;margin-top:0.3rem}
+    .betting-card{background:rgba(0,0,0,0.3);border-radius:12px;padding:0.3rem;text-align:center;border:1px solid rgba(255,255,255,0.05)}
+    .betting-card.highlight{border-color:var(--neon-green);background:rgba(0,255,136,0.05)}
+    .tab-content{display:none}.tab-content.active{display:block}
+    .tabs-nav{display:flex;gap:0.3rem;border-bottom:1px solid rgba(0,255,255,0.2);padding-bottom:0.2rem;margin-bottom:0.5rem;flex-wrap:wrap}
+    .tab-nav-btn{background:transparent;border:none;padding:0.25rem 0.6rem;font-family:'Orbitron';font-weight:600;color:var(--muted);cursor:pointer;font-size:0.55rem}
+    .tab-nav-btn.active{color:var(--neon-cyan);border-bottom:2px solid var(--neon-cyan)}
+    .note{text-align:center;color:#64748b;font-size:0.5rem;margin-top:0.8rem}
+    .fixture-item{background:rgba(0,0,0,0.35);border:1px solid rgba(0,255,255,0.12);border-radius:18px;padding:0.8rem;margin-bottom:0.7rem}
+    .fixture-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap}
+    .fixture-date{font-size:0.5rem;color:var(--muted);margin-top:0.2rem}
+    .history-page-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem;margin-bottom:0.8rem}
+    .search-bar{flex:1;min-width:180px;padding:0.4rem 0.8rem;border-radius:40px;background:rgba(0,0,0,0.5);border:1px solid rgba(0,255,255,0.25);color:white;font-family:'Rajdhani';font-size:0.75rem;outline:none}
+    .filter-strip{display:flex;gap:0.3rem;flex-wrap:wrap;margin-bottom:0.5rem}
+    .filter-btn{padding:0.2rem 0.55rem;border-radius:20px;border:1px solid rgba(0,255,255,0.2);background:transparent;color:var(--muted);font-family:'Rajdhani';font-size:0.6rem;cursor:pointer}
+    .filter-btn.active{background:rgba(0,255,255,0.12);color:var(--neon-cyan);border-color:var(--neon-cyan)}
+    @keyframes cardReveal{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes neonPulse{0%,100%{box-shadow:0 0 6px var(--win-border)}50%{box-shadow:0 0 18px var(--win-border),0 0 30px rgba(0,207,255,0.3)}}
+    @keyframes neonPulseRed{0%,100%{box-shadow:0 0 6px var(--loss-border)}50%{box-shadow:0 0 18px var(--loss-border),0 0 30px rgba(255,34,68,0.3)}}
+    @keyframes neonPulseYellow{0%,100%{box-shadow:0 0 6px var(--pending-border)}50%{box-shadow:0 0 18px var(--pending-border),0 0 30px rgba(255,230,0,0.3)}}
+    .history-card{background:rgba(8,8,24,0.85);backdrop-filter:blur(16px);border-radius:20px;border:1px solid rgba(0,255,255,0.15);padding:0.9rem;margin-bottom:0.8rem;animation:cardReveal 0.4s ease both}
+    .history-card.win-card{border-color:var(--win-border);animation:cardReveal 0.4s ease both,neonPulse 3s infinite}
+    .history-card.loss-card{border-color:var(--loss-border);animation:cardReveal 0.4s ease both,neonPulseRed 3s infinite}
+    .history-card.pending-card{border-color:var(--pending-border);animation:cardReveal 0.4s ease both,neonPulseYellow 3s infinite}
+    .hcard-header{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:0.4rem}
+    .hcard-league{font-size:0.5rem;color:var(--neon-cyan);letter-spacing:2px;text-transform:uppercase;font-family:'Orbitron'}
+    .hcard-datetime{font-size:0.45rem;color:var(--muted)}
+    .hcard-teams{display:flex;align-items:center;justify-content:space-between;margin:0.6rem 0;gap:0.5rem}
+    .hcard-team{display:flex;flex-direction:column;align-items:center;gap:0.2rem;flex:1}
+    .hcard-team-logo{width:36px;height:36px;border-radius:50%;background:rgba(0,255,255,0.08);border:1px solid rgba(0,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:1.1rem}
+    .hcard-team-name{font-size:0.6rem;font-weight:700;text-align:center;font-family:'Orbitron';max-width:80px}
+    .hcard-score-vs{display:flex;flex-direction:column;align-items:center;gap:0.2rem}
+    .hcard-ft-score{font-family:'Orbitron';font-size:1.2rem;font-weight:900;color:white;text-shadow:0 0 10px rgba(0,255,255,0.5)}
+    .status-badge{display:inline-flex;align-items:center;gap:3px;padding:0.15rem 0.5rem;border-radius:20px;font-family:'Orbitron';font-size:0.45rem;font-weight:700}
+    .badge-win{background:rgba(0,207,255,0.12);color:var(--win-color);border:1px solid var(--win-border)}
+    .badge-loss{background:rgba(255,34,68,0.12);color:var(--loss-color);border:1px solid var(--loss-border)}
+    .badge-pending{background:rgba(255,230,0,0.12);color:var(--pending-color);border:1px solid var(--pending-border)}
+    .market-results-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:0.35rem;margin:0.5rem 0}
+    .mkt-box{border-radius:10px;padding:0.3rem 0.4rem;text-align:center;border:1px solid rgba(255,255,255,0.08);background:rgba(0,0,0,0.3)}
+    .mkt-box.mkt-win{border-color:var(--win-border);background:rgba(0,207,255,0.06);animation:neonPulse 2.5s infinite}
+    .mkt-box.mkt-loss{border-color:var(--loss-border);background:rgba(255,34,68,0.06);animation:neonPulseRed 2.5s infinite}
+    .mkt-box.mkt-pending{border-color:var(--pending-border)}
+    .mkt-label{font-size:0.48rem;font-weight:700;text-transform:uppercase}
+    .mkt-prob{font-size:0.55rem;font-family:'Orbitron';font-weight:700}
+    .mkt-badge{font-size:0.38rem;padding:0.08rem 0.3rem;border-radius:20px;font-family:'Orbitron';font-weight:900;display:inline-block;color:white}
+    .ft-logger{display:flex;gap:0.4rem;align-items:center;flex-wrap:wrap;margin-top:0.5rem;padding-top:0.5rem;border-top:1px solid rgba(0,255,255,0.1)}
+    .ft-input{width:45px;padding:0.25rem;border-radius:8px;background:rgba(0,0,0,0.6);border:1px solid rgba(0,255,255,0.3);color:white;font-family:'Orbitron';font-size:0.7rem;text-align:center}
+    .analytics-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:0.6rem;margin-bottom:0.8rem}
+    .analytics-card{background:rgba(0,0,0,0.4);border-radius:16px;border:1px solid rgba(0,255,255,0.15);padding:0.7rem;text-align:center}
+    .ac-icon{font-size:1.2rem}.ac-value{font-family:'Orbitron';font-size:1.1rem;font-weight:900;color:var(--neon-cyan)}
+    .ac-value.win-val{color:var(--win-color)}.ac-value.loss-val{color:var(--loss-color)}
+    .ac-label{font-size:0.42rem;color:var(--muted);text-transform:uppercase}
+    .streak-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:0.6rem;margin-bottom:0.8rem}
+    .streak-card{background:rgba(0,0,0,0.4);border-radius:16px;padding:0.7rem;text-align:center;border:1px solid rgba(255,230,0,0.2);animation:neonPulseYellow 4s infinite}
+    .streak-card.win-streak{border-color:var(--win-border);animation:neonPulse 4s infinite}
+    .streak-card.loss-streak{border-color:var(--loss-border);animation:neonPulseRed 4s infinite}
+    .streak-val{font-family:'Orbitron';font-size:1.5rem;font-weight:900;color:var(--neon-yellow)}
+    .streak-label{font-size:0.45rem;color:var(--muted);text-transform:uppercase}
+    .chart-wrapper{background:rgba(0,0,0,0.3);border-radius:14px;padding:0.6rem;margin-bottom:0.5rem;border:1px solid rgba(0,255,255,0.08)}
+    .toast-container{position:fixed;bottom:20px;right:20px;z-index:10000;display:flex;flex-direction:column;gap:0.4rem}
+    .toast{background:rgba(0,0,0,0.85);border:1px solid var(--neon-cyan);border-radius:12px;padding:0.5rem 1rem;font-size:0.6rem;color:white;animation:cardReveal 0.3s ease;font-family:'Rajdhani'}
+    .toast.toast-success{border-color:var(--neon-green);color:var(--neon-green)}
+    .toast.toast-error{border-color:var(--neon-red);color:var(--neon-red)}
+    .auto-scan-status{background:rgba(0,255,136,0.08);border:1px solid var(--neon-green);border-radius:20px;padding:0.25rem 0.6rem;font-size:0.5rem;color:var(--neon-green);display:inline-flex;align-items:center;gap:4px;margin-left:0.5rem}
+    .auto-scan-status.scanning{border-color:var(--neon-yellow);color:var(--neon-yellow);animation:pulse 1.5s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+    .predictions-page-card{background:rgba(0,0,0,0.45);backdrop-filter:blur(8px);border-radius:18px;border:1px solid rgba(0,255,255,0.2);padding:0.9rem;margin-bottom:0.7rem;animation:cardReveal 0.4s ease both}
+    .predictions-league-header{font-family:'Orbitron';font-size:0.65rem;color:var(--neon-yellow);margin-bottom:0.5rem;text-transform:uppercase}
+    .countdown-timer{font-family:'Orbitron';color:var(--neon-cyan);font-size:0.7rem;text-align:center;margin:0.3rem 0}
+    .seq-progress{display:flex;gap:0.3rem;flex-wrap:wrap;margin:0.4rem 0;justify-content:center}
+    .seq-dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.1);border:1px solid rgba(0,255,255,0.2);position:relative}
+    .seq-dot.done{background:var(--neon-green);border-color:var(--neon-green)}
+    .seq-dot.active{background:var(--neon-yellow);border-color:var(--neon-yellow);animation:pulse 1s infinite}
+    .seq-dot.skipped{background:rgba(100,100,100,0.5);border-color:#666}
+    .seq-dot::after{content:attr(data-league);position:absolute;bottom:-16px;left:50%;transform:translateX(-50%);font-size:0.35rem;color:var(--muted);white-space:nowrap}
+    .prediction-match-row{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;padding:0.4rem 0;border-bottom:1px solid rgba(255,255,255,0.05);gap:0.3rem}
+    .prediction-match-row .team-names{font-size:0.6rem;font-weight:600;min-width:140px}
+    .prediction-match-row .match-date{font-size:0.5rem;color:var(--muted)}
+    .prediction-match-row .primary-pick{font-size:0.5rem;color:var(--neon-yellow);font-family:'Orbitron'}
+    .prediction-match-row .ah-info{font-size:0.45rem;color:var(--half-win-color)}
+    .prediction-match-row .cs-top{font-size:0.5rem;color:var(--neon-cyan);font-family:'Orbitron'}
+    .refresh-bar{display:flex;justify-content:center;gap:1rem;align-items:center;flex-wrap:wrap;padding:0.5rem;background:rgba(124,58,237,0.1);border-radius:14px;margin-bottom:0.6rem;border:1px solid rgba(124,58,237,0.3)}
+    .save-hist-btn{font-size:0.48rem;padding:0.2rem 0.5rem;border-radius:20px;background:linear-gradient(135deg,rgba(0,207,255,0.2),rgba(255,0,200,0.1));border:1px solid rgba(0,207,255,0.4);color:var(--win-color);cursor:pointer;font-family:'Orbitron'}
+    .asian-line-selector{display:flex;gap:0.3rem;align-items:center;margin:0.3rem 0;flex-wrap:wrap}
+    .asian-line-btn{padding:0.15rem 0.4rem;border-radius:20px;border:1px solid rgba(0,255,255,0.2);background:transparent;color:var(--muted);font-size:0.5rem;cursor:pointer}
+    .asian-line-btn.active{background:rgba(0,255,255,0.12);color:var(--neon-cyan);border-color:var(--neon-cyan)}
+    .data-mgmt-row{display:flex;gap:0.4rem;flex-wrap:wrap;justify-content:center;margin:0.5rem 0}
+    .empty-history{text-align:center;padding:2rem;color:var(--muted);font-size:0.7rem}
+    .api-source-selector{display:flex;gap:0.3rem;flex-wrap:wrap}
+    .api-source-btn{padding:0.2rem 0.5rem;border-radius:20px;border:1px solid rgba(0,255,255,0.2);background:transparent;color:var(--muted);font-family:'Rajdhani';font-size:0.6rem;cursor:pointer}
+    .api-source-btn.active{background:rgba(0,255,255,0.12);color:var(--neon-cyan);border-color:var(--neon-cyan)}
+    @media(max-width:600px){.analytics-grid{grid-template-columns:repeat(2,1fr)}.streak-grid{grid-template-columns:repeat(2,1fr)}.market-results-grid{grid-template-columns:repeat(3,1fr)}.seq-dot::after{font-size:0.28rem;bottom:-12px}.prediction-match-row .team-names{min-width:100px;font-size:0.55rem}}
   </style>
 </head>
 <body>
-  <div class="particles" id="particlesContainer"></div>
   <div class="toast-container" id="toastContainer"></div>
-  <div class="modal-overlay hidden" id="confirmModal">
-    <div class="modal-box">
-      <h3 id="confirmTitle">⚠️ Confirm</h3>
-      <p id="confirmMsg">Are you sure?</p>
-      <div class="modal-btns"><button class="btn-danger" id="confirmYes">Yes, Delete</button><button onclick="closeConfirmModal()">Cancel</button></div>
-    </div>
-  </div>
   <div id="authWrapper" style="min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px;background:#0a0a1a;position:fixed;inset:0;z-index:9000">
     <div style="width:100%;max-width:360px;background:rgba(10,10,30,0.85);backdrop-filter:blur(25px);border:1px solid rgba(0,255,255,0.2);border-radius:24px;padding:1.5rem;">
-      <div style="text-align:center;margin-bottom:1rem;"><h1 style="font-size:1rem;">🧠 NEURAL PREDICTOR</h1><p style="color:#94a3b8;font-size:0.5rem;">The Legend of the Future James's Creation</p></div>
+      <div style="text-align:center;margin-bottom:1rem;"><h1 style="font-size:1rem;">🧠 NEURAL PREDICTOR</h1><p style="color:#94a3b8;font-size:0.5rem;">v6.0 · 12 Leagues · 30s Gap</p></div>
       <div style="display:flex;gap:0;margin-bottom:1rem;border-radius:40px;background:rgba(0,0,0,0.4);padding:2px;">
         <button class="auth-tab active" data-atab="login" style="flex:1;padding:0.45rem;border-radius:40px;font-family:'Orbitron';font-size:0.55rem;background:linear-gradient(135deg,rgba(0,255,255,0.2),rgba(255,0,200,0.1));color:white;">🔐 LOGIN</button>
         <button class="auth-tab" data-atab="register" style="flex:1;padding:0.45rem;border-radius:40px;font-family:'Orbitron';font-size:0.55rem;background:transparent;color:#94a3b8;">📝 REGISTER</button>
@@ -327,8 +185,8 @@
     <button id="appLogoutBtn" class="logout-btn">⤀ LOGOUT</button>
     <div class="main-container">
       <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;">
-        <div><h1>🧠 THE LEGEND OF THE FUTURE JAMES'S CREATION</h1><p class="subtitle"><span class="live-indicator"></span> v5.9 · 12 Leagues · 30s Gap · Shared Storage · Full Features</p></div>
-        <div style="display:flex;gap:0.4rem;align-items:center;flex-wrap:wrap;"><span class="user-badge">👤 <span id="currentUserDisplay"></span></span><span id="apiStatus" class="api-status">⚡ Ready</span><span id="dbStatusIndicator" class="db-status db-ready">💾 Shared</span><span id="autoScanStatus" class="auto-scan-status">✅ Ready</span></div>
+        <div><h1>🧠 THE LEGEND OF THE FUTURE JAMES'S CREATION</h1><p class="subtitle">v6.0 · 12 Leagues · 30s Gap · Shared Storage</p></div>
+        <div style="display:flex;gap:0.4rem;align-items:center;"><span class="user-badge">👤 <span id="currentUserDisplay"></span></span><span id="autoScanStatus" class="auto-scan-status">✅ Ready</span></div>
       </div>
       <div class="page-menu">
         <button class="page-menu-btn" data-page="predictions">🔮 PREDICTIONS</button>
@@ -339,9 +197,9 @@
       </div>
       <!-- PREDICTIONS PAGE -->
       <div id="predictionsPage" class="page-content hidden">
-        <div class="refresh-bar"><span>📡 12 Leagues · 30s gap · Shared storage</span><button class="btn-refresh" onclick="refreshAllPredictions()">🔄 REFRESH ALL 12 LEAGUES</button><span id="refreshStatus" style="font-size:0.5rem;color:var(--neon-green);"></span></div>
+        <div class="refresh-bar"><span>📡 12 Leagues · 30s gap</span><button class="btn-refresh" onclick="refreshAllPredictions()">🔄 REFRESH ALL 12 LEAGUES</button><span id="refreshStatus" style="font-size:0.5rem;color:var(--neon-green);"></span></div>
         <div class="section">
-          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;"><h3 style="font-size:0.75rem;color:var(--neon-cyan);">🔮 LIVE PREDICTIONS</h3><div class="countdown-timer" id="countdownTimer">Next: 30s</div></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;"><h3 style="font-size:0.75rem;color:var(--neon-cyan);">🔮 LIVE PREDICTIONS</h3><div class="countdown-timer" id="countdownTimer">Next: 30s</div></div>
           <div class="seq-progress" id="seqProgress"></div>
           <div id="predictionsPageContent"></div>
         </div>
@@ -350,41 +208,39 @@
       <div id="autoPage" class="page-content">
         <div class="section">
           <div class="input-row">
-            <div class="api-source-selector"><button class="api-source-btn active" data-asrc="football-data">Football-Data</button><button class="api-source-btn" data-asrc="api-football">API-Football</button></div>
-            <div class="input-group"><label>🏆 LEAGUE</label><select id="autoCompSelect"><option value="">-- Select --</option><option value="WC">🌍 FIFA World Cup</option><option value="CL">🇪🇺 UEFA Champions League</option><option value="BL1">🇩🇪 Bundesliga</option><option value="DED">🇳🇱 Eredivisie</option><option value="BSA">🇧🇷 Campeonato Brasileiro Série A</option><option value="PD">🇪🇸 Primera Division</option><option value="FL1">🇫🇷 Ligue 1</option><option value="ELC">🏴󠁧󠁢󠁥󠁮󠁧󠁿 Championship</option><option value="PPL">🇵🇹 Primeira Liga</option><option value="EC">🇪🇺 European Championship</option><option value="SA">🇮🇹 Serie A</option><option value="PL">🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League</option></select></div>
+            <div class="api-source-selector"><button class="api-source-btn active" data-asrc="football-data">Football-Data</button></div>
+            <div class="input-group"><label>🏆 LEAGUE</label><select id="autoCompSelect"><option value="">-- Select --</option><option value="WC">🌍 World Cup</option><option value="CL">🇪🇺 Champions League</option><option value="BL1">🇩🇪 Bundesliga</option><option value="DED">🇳🇱 Eredivisie</option><option value="BSA">🇧🇷 Brasileirão</option><option value="PD">🇪🇸 La Liga</option><option value="FL1">🇫🇷 Ligue 1</option><option value="ELC">🏴󠁧󠁢󠁥󠁮󠁧󠁿 Championship</option><option value="PPL">🇵🇹 Primeira Liga</option><option value="EC">🇪🇺 European Championship</option><option value="SA">🇮🇹 Serie A</option><option value="PL">🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League</option></select></div>
             <button class="btn-primary" onclick="fetchAutoLeagueData()">📡 FETCH</button>
             <button class="btn-success btn-sm" onclick="autoPredictAll()">🎯 PREDICT ALL</button>
             <button class="btn-refresh btn-sm" onclick="refreshAllPredictions()">🔄 REFRESH ALL</button>
           </div>
-          <div id="autoStatus" style="font-size:0.45rem; margin-top:0.2rem;"></div>
+          <div id="autoStatus" style="font-size:0.45rem;margin-top:0.2rem;"></div>
         </div>
         <div id="fixtureList"></div>
       </div>
       <!-- MANUAL PAGE -->
       <div id="manualPage" class="page-content hidden">
         <div class="section">
-          <div class="api-source-selector"><button class="api-source-btn active" data-msrc="football-data">Football-Data</button><button class="api-source-btn" data-msrc="api-football">API-Football</button><button class="api-source-btn" data-msrc="manual">📝 Manual</button></div>
-          <div class="input-row"><div class="input-group"><label>🏆 COMP</label><select id="manualCompSelect"><option value="">-- Select --</option><option value="WC">🌍 World Cup</option><option value="CL">🇪🇺 Champions League</option><option value="BL1">🇩🇪 Bundesliga</option><option value="DED">🇳🇱 Eredivisie</option><option value="BSA">🇧🇷 Brasileirão</option><option value="PD">🇪🇸 La Liga</option><option value="FL1">🇫🇷 Ligue 1</option><option value="ELC">🏴󠁧󠁢󠁥󠁮󠁧󠁿 Championship</option><option value="PPL">🇵🇹 Primeira Liga</option><option value="EC">🇪🇺 European Championship</option><option value="SA">🇮🇹 Serie A</option><option value="PL">🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League</option></select></div><button class="btn-primary btn-sm" onclick="fetchManualStandings()">📡 FETCH</button><button class="btn-sm" onclick="fetchRecentMatches()">📜 FORM</button></div>
-          <div id="savedLeaguesSection" class="saved-leagues-section hidden"></div>
-          <div id="manualInputSection" class="hidden"><textarea id="manualTableInput" rows="3" placeholder="| Pos | Team | P | W | D | L | GLS | PTS |"></textarea><div class="input-row"><input type="text" id="manualLeagueName" placeholder="League name" style="flex:1"><button class="btn-warning btn-sm" onclick="parseManualTable()">📋 PARSE</button><button class="btn-success btn-sm" onclick="saveManualLeague()">💾 SAVE</button></div><div id="manualParseMsg"></div></div>
+          <div class="api-source-selector"><button class="api-source-btn active" data-msrc="football-data">Football-Data</button><button class="api-source-btn" data-msrc="manual">📝 Manual</button></div>
+          <div class="input-row"><div class="input-group"><label>🏆 COMP</label><select id="manualCompSelect"><option value="">-- Select --</option><option value="WC">🌍 WC</option><option value="CL">🇪🇺 CL</option><option value="BL1">🇩🇪 BL</option><option value="DED">🇳🇱 ED</option><option value="BSA">🇧🇷 BSA</option><option value="PD">🇪🇸 PD</option><option value="FL1">🇫🇷 L1</option><option value="ELC">🏴󠁧󠁢󠁥󠁮󠁧󠁿 ELC</option><option value="PPL">🇵🇹 PPL</option><option value="EC">🇪🇺 EC</option><option value="SA">🇮🇹 SA</option><option value="PL">🏴󠁧󠁢󠁥󠁮󠁧󠁿 PL</option></select></div><button class="btn-primary btn-sm" onclick="fetchManualStandings()">📡 FETCH</button></div>
           <div id="standingsPreview" style="font-size:0.45rem;margin-top:0.2rem;"></div>
         </div>
-        <div class="section"><div class="input-row"><div class="input-group"><label>⚽ AVG G/M</label><input id="computedAvg" readonly value="2.75" style="width:55px;"></div><div class="input-group"><label>🏠 HA</label><input type="number" id="homeAdvInput" step="0.05" value="1.18" style="width:55px;"></div><div class="input-group"><label>🌤️</label><select id="weatherSelect"><option value="clear">☀️</option><option value="light_rain">🌧️</option></select></div><div class="input-group"><label>📊 FORM WT</label><input type="number" id="formWeightInput" step="0.05" value="0.60" min="0.3" max="0.8" style="width:50px;"></div><button class="btn-sm" onclick="autoCalibrate()">🔧 AUTO</button></div></div>
+        <div class="section"><div class="input-row"><div class="input-group"><label>⚽ AVG G/M</label><input id="computedAvg" readonly value="2.75" style="width:55px;"></div><div class="input-group"><label>🏠 HA</label><input type="number" id="homeAdvInput" step="0.05" value="1.18" style="width:55px;"></div><div class="input-group"><label>📊 FORM WT</label><input type="number" id="formWeightInput" step="0.05" value="0.60" style="width:50px;"></div><button class="btn-sm" onclick="autoCalibrate()">🔧 AUTO</button></div></div>
         <div class="teams-grid"><div class="team-card"><h3>🏠 HOME</h3><select id="homeSelect" onchange="updateManualTeam('home')"></select><div id="homeStats"></div><div id="homeElo" class="elo-display"></div></div><div class="team-card"><h3>✈️ AWAY</h3><select id="awaySelect" onchange="updateManualTeam('away')"></select><div id="awayStats"></div><div id="awayElo" class="elo-display"></div></div></div>
-        <div style="text-align:center;gap:0.3rem;display:flex;flex-wrap:wrap;justify-content:center;margin-bottom:0.5rem"><button class="btn-primary" onclick="calculateAll()">📊 PREDICT (Poisson+MC+NN+Elo)</button><button class="btn-success btn-sm" onclick="trainAndPredictTF()">🧠 NN TRAIN & PREDICT</button><button class="save-hist-btn" onclick="saveCurrentToHistory()">💾 SAVE TO HISTORY</button></div>
+        <div style="text-align:center;gap:0.3rem;display:flex;flex-wrap:wrap;justify-content:center;margin:0.5rem 0"><button class="btn-primary" onclick="calculateAll()">📊 PREDICT</button><button class="btn-success btn-sm" onclick="trainAndPredictTF()">🧠 NN</button><button class="save-hist-btn" onclick="saveCurrentToHistory()">💾 SAVE</button></div>
         <div class="tabs-nav"><button class="tab-nav-btn active" data-mtab="predictions">📊 PREDICTIONS</button><button class="tab-nav-btn" data-mtab="betting">💰 MARKETS</button><button class="tab-nav-btn" data-mtab="heatmap">🔥 HEATMAP</button><button class="tab-nav-btn" data-mtab="calibration">🎯 LEARN</button></div>
         <div id="predictionsTab" class="tab-content active"><div class="results-grid" id="resultsContainer"><p style="color:var(--muted);text-align:center;">Select teams and PREDICT</p></div></div>
         <div id="bettingTab" class="tab-content"><div class="section"><div class="betting-grid" id="bettingMarkets"></div></div></div>
         <div id="heatmapTab" class="tab-content"><div class="section"><div class="heatmap-grid" id="heatmapGrid"></div></div></div>
-        <div id="calibrationTab" class="tab-content"><div><div class="input-row" style="justify-content:center;"><input type="number" id="actualHomeGoals" placeholder="0" style="width:50px;"><input type="number" id="actualAwayGoals" placeholder="0" style="width:50px;"><button class="btn-sm" onclick="logManualResult()">📝 LOG RESULT</button><button class="btn-success btn-sm" onclick="selfLearn()">🧠 ANALYZE</button></div><div id="calibrationStats"></div><div id="learningInsights"></div></div></div>
-        <div class="asian-line-selector"><span style="font-size:0.45rem;color:var(--neon-cyan);">🌏 AH LINE:</span><button class="asian-line-btn active" data-line="0" onclick="setAsianLine(0)">0</button><button class="asian-line-btn" data-line="0.25" onclick="setAsianLine(0.25)">0.25</button><button class="asian-line-btn" data-line="0.5" onclick="setAsianLine(0.5)">0.5</button><button class="asian-line-btn" data-line="0.75" onclick="setAsianLine(0.75)">0.75</button><button class="asian-line-btn" data-line="1" onclick="setAsianLine(1)">1</button><button class="asian-line-btn" data-line="1.25" onclick="setAsianLine(1.25)">1.25</button><button class="asian-line-btn" data-line="1.5" onclick="setAsianLine(1.5)">1.5</button></div>
+        <div id="calibrationTab" class="tab-content"><div><div class="input-row" style="justify-content:center;"><input type="number" id="actualHomeGoals" placeholder="0" style="width:50px;"><input type="number" id="actualAwayGoals" placeholder="0" style="width:50px;"><button class="btn-sm" onclick="logManualResult()">📝 LOG</button><button class="btn-success btn-sm" onclick="selfLearn()">🧠 ANALYZE</button></div><div id="calibrationStats"></div><div id="learningInsights"></div></div></div>
+        <div class="asian-line-selector"><span style="font-size:0.45rem;color:var(--neon-cyan);">🌏 AH:</span><button class="asian-line-btn active" data-line="0" onclick="setAsianLine(0)">0</button><button class="asian-line-btn" data-line="0.25" onclick="setAsianLine(0.25)">0.25</button><button class="asian-line-btn" data-line="0.5" onclick="setAsianLine(0.5)">0.5</button><button class="asian-line-btn" data-line="0.75" onclick="setAsianLine(0.75)">0.75</button><button class="asian-line-btn" data-line="1" onclick="setAsianLine(1)">1</button></div>
       </div>
       <!-- HISTORY PAGE -->
       <div id="historyPage" class="page-content hidden">
         <div class="section">
-          <div class="history-page-header"><input type="text" class="search-bar" id="historySearch" placeholder="🔍 Search..." oninput="renderHistoryCards()"><select class="sort-select" id="historySort" onchange="renderHistoryCards()"><option value="newest">Latest</option><option value="oldest">Oldest</option></select></div>
+          <div class="history-page-header"><input type="text" class="search-bar" id="historySearch" placeholder="🔍 Search..." oninput="renderHistoryCards()"></div>
           <div class="filter-strip"><button class="filter-btn active" data-hf="all" onclick="setHistoryFilter('all')">All</button><button class="filter-btn" data-hf="wins" onclick="setHistoryFilter('wins')">✅ Wins</button><button class="filter-btn" data-hf="losses" onclick="setHistoryFilter('losses')">❌ Losses</button><button class="filter-btn" data-hf="pending" onclick="setHistoryFilter('pending')">⏳ Pending</button></div>
-          <div class="data-mgmt-row"><button class="btn-success btn-sm" onclick="exportHistory()">⬇️ EXPORT</button><button class="btn-primary btn-sm" onclick="document.getElementById('importFileInput').click()">⬆️ IMPORT</button><button class="btn-danger btn-sm" onclick="confirmClearHistory()">🗑️ CLEAR</button><input type="file" id="importFileInput" accept=".json" style="display:none" onchange="importHistory(event)"></div>
+          <div class="data-mgmt-row"><button class="btn-success btn-sm" onclick="exportHistory()">⬇️ EXPORT</button><button class="btn-danger btn-sm" onclick="confirmClearHistory()">🗑️ CLEAR</button></div>
           <div id="historyCount" style="font-size:0.5rem;color:var(--muted);text-align:center;"></div>
         </div>
         <div id="historyCardsList"></div>
@@ -392,81 +248,59 @@
       <!-- ANALYTICS PAGE -->
       <div id="analyticsPage" class="page-content hidden">
         <div class="section"><h3>📊 OVERVIEW</h3><div class="analytics-grid" id="analyticsOverviewGrid"></div></div>
-        <div class="section"><h3>🎯 ACCURACY</h3><div style="display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;" id="progressCirclesRow"></div></div>
         <div class="section"><h3>🔥 STREAKS</h3><div class="streak-grid" id="streakGrid"></div></div>
-        <div class="section"><h3>📈 CHARTS</h3><div class="chart-wrapper" style="height:200px"><canvas id="winLossChart"></canvas></div><div class="chart-wrapper" style="height:200px"><canvas id="marketAccChart"></canvas></div></div>
-        <div class="section"><h3>💰 MARKET ACCURACY</h3><div id="marketAccTable"></div></div>
+        <div class="section"><h3>📈 CHARTS</h3><div class="chart-wrapper" style="height:200px"><canvas id="winLossChart"></canvas></div></div>
       </div>
-      <div class="note">🧠 v5.9 · 12 Leagues · 30s Gap · Shared Storage · Full Features Intact</div>
+      <div class="note">🧠 v6.0 · 12 Leagues · Full Predictions · Fixed History</div>
     </div>
   </div>
   <script>
-    // ==================== COMPLETE SCRIPT - 12 LEAGUES ====================
-    const USK='jnp11_shared_users',SSK='jnp11_session',MMK='jnp11_shared_mem',CCK='jnp11_shared_cal',WWK='jnp11_shared_wts',LLK='jnp11_shared_leagues';
-    const HISTORY_STORAGE_KEY='jnp11_shared_history';
-    const PREDICTIONS_STORAGE_KEY='jnp11_shared_predictions';
-    const COMPLETION_TRACKER_KEY='jnp11_shared_completion';
-    let curUser=null,allTeams=[],selHome=null,selAway=null,lastPred=null,lastXG=null,realForm={};
+    const USK='jnp11_shared_users',SSK='jnp11_session';
+    const HISTORY_KEY='jnp11_shared_history';
+    const PREDICTIONS_KEY='jnp11_shared_predictions';
+    const COMPLETION_KEY='jnp11_shared_completion';
+    let curUser=null,allTeams=[],selHome=null,selAway=null,lastPred=null,lastXG=null;
     let tfModel=null,tfTrained=false;
-    let calData=[],predMem=[];
-    let lw={homeAdv:1.18,drawCorr:0.08,formW:0.5,eloBlendW:0.12};
+    let lw={homeAdv:1.18,formW:0.5,eloBlendW:0.12};
     let currentAsianLine=0.25;
-    let teamFormData={};
-    let autoSrc='football-data',manSrc='football-data';
-    let upcomingFix=[];
-    let currentHistoryFilter='all';
-    let currentLeagueName='';
-    let winLossChartInst=null,marketAccChartInst=null;
-    let autoScanActive=false;
-    let sequentialLeagueIndex=0;
-    let countdownSeconds=30;
-    let refreshIntervalId=null,countdownIntervalId=null;
-    // All 12 leagues from football-data.org
+    let upcomingFix=[],currentHistoryFilter='all',currentLeagueName='';
+    let winLossChartInst=null;
+    let autoScanActive=false,sequentialLeagueIndex=0,countdownSeconds=30,refreshIntervalId=null,countdownIntervalId=null;
     const ALL_LEAGUES=['WC','CL','BL1','DED','BSA','PD','FL1','ELC','PPL','EC','SA','PL'];
-    const LEAGUE_GAP_MS=30000;
+    const GAP_MS=30000;
     function $(id){return document.getElementById(id);}
 
-    function getCompletionTracker(){const d=localStorage.getItem(COMPLETION_TRACKER_KEY);return d?JSON.parse(d):{};}
-    function saveCompletionTracker(t){localStorage.setItem(COMPLETION_TRACKER_KEY,JSON.stringify(t));}
-    function isLeagueComplete(c){const t=getCompletionTracker();return t[c]?.complete||false;}
-    function markLeagueComplete(c,tf){const t=getCompletionTracker();t[c]={complete:true,totalFixtures:tf,completedAt:Date.now()};saveCompletionTracker(t);}
-    function clearCompletionTracker(){localStorage.removeItem(COMPLETION_TRACKER_KEY);}
-    function updateDBStatus(){const i=$('dbStatusIndicator');if(i){i.textContent='💾 Shared';i.className='db-status db-ready';}}
+    function getCompletion(){const d=localStorage.getItem(COMPLETION_KEY);return d?JSON.parse(d):{};}
+    function saveCompletion(t){localStorage.setItem(COMPLETION_KEY,JSON.stringify(t));}
+    function isComplete(c){const t=getCompletion();return t[c]?.complete||false;}
+    function markComplete(c,tf){const t=getCompletion();t[c]={complete:true,totalFixtures:tf,completedAt:Date.now()};saveCompletion(t);}
+    function clearCompletion(){localStorage.removeItem(COMPLETION_KEY);}
 
-    async function dbAdd(r){const h=await dbGetAll();r.id=Date.now()+Math.random()*10000;h.push(r);localStorage.setItem(HISTORY_STORAGE_KEY,JSON.stringify(h));return r.id;}
-    async function dbGetAll(){const d=localStorage.getItem(HISTORY_STORAGE_KEY);return d?JSON.parse(d):[];}
-    async function dbUpdate(r){const h=await dbGetAll();const i=h.findIndex(x=>x.id===r.id);if(i!==-1){h[i]=r;localStorage.setItem(HISTORY_STORAGE_KEY,JSON.stringify(h));}return r.id;}
-    async function dbDelete(id){let h=await dbGetAll();h=h.filter(r=>r.id!==id);localStorage.setItem(HISTORY_STORAGE_KEY,JSON.stringify(h));}
-    async function dbClearAll(){localStorage.removeItem(HISTORY_STORAGE_KEY);}
-    function initHistoryStorage(){if(!localStorage.getItem(HISTORY_STORAGE_KEY))localStorage.setItem(HISTORY_STORAGE_KEY,JSON.stringify([]));updateDBStatus();}
-    async function isDuplicateMatch(ht,at,ln){const all=await dbGetAll();return all.some(r=>r.homeTeam===ht&&r.awayTeam===at&&r.leagueName===ln);}
-    function getLivePredictions(){const d=localStorage.getItem(PREDICTIONS_STORAGE_KEY);return d?JSON.parse(d):{};}
-    function saveLivePredictions(p){localStorage.setItem(PREDICTIONS_STORAGE_KEY,JSON.stringify(p));}
+    async function dbAdd(r){const h=await dbAll();r.id=Date.now()+Math.random()*10000;h.push(r);localStorage.setItem(HISTORY_KEY,JSON.stringify(h));return r.id;}
+    async function dbAll(){const d=localStorage.getItem(HISTORY_KEY);return d?JSON.parse(d):[];}
+    async function dbUpdate(r){const h=await dbAll();const i=h.findIndex(x=>x.id===r.id);if(i!==-1){h[i]=r;localStorage.setItem(HISTORY_KEY,JSON.stringify(h));}}
+    async function dbDelete(id){let h=await dbAll();h=h.filter(r=>r.id!==id);localStorage.setItem(HISTORY_KEY,JSON.stringify(h));}
+    async function dbClear(){localStorage.removeItem(HISTORY_KEY);}
+    async function isDup(ht,at,ln){const all=await dbAll();return all.some(r=>r.homeTeam===ht&&r.awayTeam===at&&r.leagueName===ln);}
+    function getPreds(){const d=localStorage.getItem(PREDICTIONS_KEY);return d?JSON.parse(d):{};}
+    function savePreds(p){localStorage.setItem(PREDICTIONS_KEY,JSON.stringify(p));}
 
     function initUsers(){let u=JSON.parse(localStorage.getItem(USK)||'[]');if(!u.find(x=>x.username==='demoUser'))u.push({username:'demoUser',password:'demo123'});localStorage.setItem(USK,JSON.stringify(u));}
-    function loadData(){predMem=JSON.parse(localStorage.getItem(MMK)||'[]');calData=JSON.parse(localStorage.getItem(CCK)||'[]');let sw=JSON.parse(localStorage.getItem(WWK));if(sw)lw=sw;}
-    function saveData(){localStorage.setItem(MMK,JSON.stringify(predMem.slice(-200)));localStorage.setItem(CCK,JSON.stringify(calData.slice(-150)));localStorage.setItem(WWK,JSON.stringify(lw));}
-    function loginUser(){let u=$('loginUsername').value.trim(),p=$('loginPassword').value.trim();let users=JSON.parse(localStorage.getItem(USK)||'[]');let user=users.find(x=>x.username===u&&x.password===p);if(!user){$('loginMessage').innerText='❌ Invalid';return;}curUser=user;sessionStorage.setItem(SSK,JSON.stringify(user));loadData();showApp();}
-    function registerUser(){let u=$('regUsername').value.trim(),p=$('regPassword').value.trim(),cp=$('regConfirmPassword').value.trim();if(p!==cp){$('registerMessage').innerText='❌ mismatch';return;}let users=JSON.parse(localStorage.getItem(USK)||'[]');if(users.find(x=>x.username===u)){$('registerMessage').innerText='Exists';return;}users.push({username:u,password:p});localStorage.setItem(USK,JSON.stringify(users));$('registerMessage').innerText='✅ Created! Login.';setTimeout(()=>{document.querySelector('[data-atab="login"]').click();},1000);}
+    function loginUser(){let u=$('loginUsername').value.trim(),p=$('loginPassword').value.trim();let users=JSON.parse(localStorage.getItem(USK)||'[]');let user=users.find(x=>x.username===u&&x.password===p);if(!user){$('loginMessage').innerText='❌ Invalid';return;}curUser=user;sessionStorage.setItem(SSK,JSON.stringify(user));showApp();}
+    function registerUser(){let u=$('regUsername').value.trim(),p=$('regPassword').value.trim(),cp=$('regConfirmPassword').value.trim();if(p!==cp){$('registerMessage').innerText='❌ mismatch';return;}let users=JSON.parse(localStorage.getItem(USK)||'[]');if(users.find(x=>x.username===u)){$('registerMessage').innerText='Exists';return;}users.push({username:u,password:p});localStorage.setItem(USK,JSON.stringify(users));$('registerMessage').innerText='✅ Created!';setTimeout(()=>{document.querySelector('[data-atab="login"]').click();},1000);}
 
-    function calculateAsianHandicap(hp,dp,ap,line=0.25){let hc=0,ac=0;if(line===0){hc=hp+dp*0.5;ac=ap+dp*0.5;}else if(line===0.25){hc=(hp+dp*0.5)*0.5+hp*0.5;ac=(ap+dp*0.5)*0.5+(ap+dp)*0.5;}else if(line===0.5){hc=hp;ac=ap+dp;}else if(line===0.75){hc=hp*0.5+hp*0.5;ac=(ap+dp)*0.5+(ap+dp)*0.5;}else{hc=hp;ac=ap+dp;}return{homeCover:Math.min(1,Math.max(0,hc)),awayCover:Math.min(1,Math.max(0,ac)),line,homeOdds:1/Math.max(0.01,hc),awayOdds:1/Math.max(0.01,ac)};}
-    function calculateDoubleChance(hp,dp,ap){return{homeOrDraw:hp+dp,awayOrDraw:ap+dp,homeOrAway:hp+ap,homeOdds:1/Math.max(0.01,hp+dp),awayOdds:1/Math.max(0.01,ap+dp)};}
-    function evaluateAsianHandicapResult(hs,as,line){let ah=hs-line;if(ah>as)return'home_win';if(ah<as)return'away_win';return'push';}
-    function evaluateDoubleChanceResult(hs,as,bt){const hw=hs>as,d=hs===as,aw=hs<as;if(bt==='home_or_draw')return hw||d;if(bt==='away_or_draw')return aw||d;if(bt==='home_or_away')return hw||aw;return false;}
+    function showToast(msg,type='info'){const t=document.createElement('div');t.className=`toast ${type==='success'?'toast-success':type==='error'?'toast-error':''}`;t.textContent=msg;$('toastContainer').appendChild(t);setTimeout(()=>t.remove(),3000);}
 
-    (function spawnParticles(){const c=$('particlesContainer');for(let i=0;i<25;i++){const p=document.createElement('div');p.className='particle';p.style.cssText=`left:${Math.random()*100}%;width:${Math.random()*3+1}px;height:${Math.random()*3+1}px;animation-duration:${Math.random()*15+8}s;animation-delay:${Math.random()*10}s;opacity:${Math.random()*0.5+0.1}`;c.appendChild(p);}})();
-    function showToast(msg,type='info'){const t=document.createElement('div');t.className=`toast ${type==='success'?'toast-success':type==='error'?'toast-error':''}`;t.textContent=msg;$('toastContainer').appendChild(t);setTimeout(()=>t.remove(),3200);}
-    let confirmCallback=null;
-    function showConfirmModal(title,msg,cb){$('confirmTitle').textContent=title;$('confirmMsg').textContent=msg;confirmCallback=cb;$('confirmModal').classList.remove('hidden');}
-    function closeConfirmModal(){$('confirmModal').classList.add('hidden');confirmCallback=null;}
-    $('confirmYes')&&document.getElementById('confirmYes').addEventListener('click',()=>{if(confirmCallback)confirmCallback();closeConfirmModal();});
+    function calcAH(hp,dp,ap,l=0.25){let hc=0,ac=0;if(l===0){hc=hp+dp*0.5;ac=ap+dp*0.5;}else if(l===0.25){hc=(hp+dp*0.5)*0.5+hp*0.5;ac=(ap+dp*0.5)*0.5+(ap+dp)*0.5;}else{hc=hp;ac=ap+dp;}return{homeCover:Math.min(1,Math.max(0,hc)),awayCover:Math.min(1,Math.max(0,ac)),line:l};}
+    function calcDC(hp,dp,ap){return{homeOrDraw:hp+dp,awayOrDraw:ap+dp};}
+    function evalAH(hs,as,l){let ah=hs-l;if(ah>as)return'home_win';if(ah<as)return'away_win';return'push';}
+    function evalDC(hs,as,bt){const hw=hs>as,d=hs===as,aw=hs<as;if(bt==='home_or_draw')return hw||d;if(bt==='away_or_draw')return aw||d;return false;}
 
     async function showApp(){
       $('authWrapper').classList.add('hidden');$('predictorApp').classList.remove('hidden');$('currentUserDisplay').innerText=curUser?.username;
-      refreshSavedLeagues();updateCalDisplay();renderHistoryCards();refreshAnalytics();renderPredictionsPage();
-      $('autoScanStatus').textContent='✅ Ready';$('autoScanStatus').className='auto-scan-status complete';
-      updateSeqProgress();
-      startAutoRefreshCycle();
+      renderHistoryCards();refreshAnalytics();renderPredictionsPage();
+      $('autoScanStatus').textContent='✅ Ready';$('autoScanStatus').className='auto-scan-status';
+      updateSeqProgress();startAutoRefresh();
     }
     function logout(){sessionStorage.removeItem(SSK);curUser=null;$('predictorApp').classList.add('hidden');$('authWrapper').classList.remove('hidden');if(refreshIntervalId)clearInterval(refreshIntervalId);if(countdownIntervalId)clearInterval(countdownIntervalId);}
 
@@ -482,133 +316,109 @@
       if(b.dataset.page==='analytics')refreshAnalytics();
     }));
     document.querySelectorAll('#manualPage .tab-nav-btn').forEach(b=>b.addEventListener('click',()=>{let p=b.closest('#manualPage');p.querySelectorAll('.tab-nav-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');p.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));p.querySelector('#'+b.dataset.mtab+'Tab').classList.add('active');if(b.dataset.mtab==='heatmap'&&lastXG)drawHeatmap(lastXG.homeXG,lastXG.awayXG);if(b.dataset.mtab==='betting'&&lastPred)renderBettingMarkets();}));
-    document.querySelectorAll('#autoPage .api-source-btn').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('#autoPage .api-source-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');autoSrc=b.dataset.asrc;}));
-    document.querySelectorAll('#manualPage .api-source-btn').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('#manualPage .api-source-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');manSrc=b.dataset.msrc;$('manualInputSection').classList.toggle('hidden',manSrc!=='manual');}));
 
-    async function apiFetch(source,endpoint){const proxyUrl=`/api/proxy?source=${source}&url=${encodeURIComponent(endpoint)}`;const res=await fetch(proxyUrl);if(!res.ok)throw new Error(`API ${res.status}`);return res.json();}
+    async function apiFetch(source,endpoint){const url=`/api/proxy?source=${source}&url=${encodeURIComponent(endpoint)}`;const res=await fetch(url);if(!res.ok)throw new Error(`API ${res.status}`);return res.json();}
 
-    function computeElo(t){if(!t||!t.played||t.played===0)return 1500;let e=1500,K=30;let wr=t.won/Math.max(1,t.played);let dr=t.draw/Math.max(1,t.played);let gd=(t.gd||0)/Math.max(1,t.played);let ppg=(t.won*3+t.draw)/Math.max(1,t.played);e+=K*(ppg/3-0.38)*t.played*0.8+gd*15+dr*20;return Math.round(Math.max(1200,Math.min(1900,e)));}
-    function getLeagueAvgPerTeam(){let a=parseFloat($('computedAvg')?.value);return isNaN(a)||a<=0?1.35:a/2;}
+    function computeElo(t){if(!t||!t.played)return 1500;let e=1500;let wr=t.won/Math.max(1,t.played),dr=t.draw/Math.max(1,t.played),gd=(t.gd||0)/Math.max(1,t.played),ppg=(t.won*3+t.draw)/Math.max(1,t.played);e+=30*(ppg/3-0.38)*t.played*0.8+gd*15+dr*20;return Math.round(Math.max(1200,Math.min(1900,e)));}
+    function getAvg(){let a=parseFloat($('computedAvg')?.value);return isNaN(a)||a<=0?1.35:a/2;}
 
     function computeXG(home,away){
       if(!home||!away)return null;
-      let lap=getLeagueAvgPerTeam(),fw=parseFloat($('formWeightInput')?.value)||0.6;fw=Math.min(0.8,Math.max(0.3,fw));let sw=1-fw;
+      let lap=getAvg(),fw=parseFloat($('formWeightInput')?.value)||0.6,sw=1-fw;
       let hsg=home.gf/Math.max(1,home.played),hsa=home.ga/Math.max(1,home.played),asg=away.gf/Math.max(1,away.played),asa=away.ga/Math.max(1,away.played);
       let hrg=home.recentGF!=null?home.recentGF:hsg,hra=home.recentGA!=null?home.recentGA:hsa,arg=away.recentGF!=null?away.recentGF:asg,ara=away.recentGA!=null?away.recentGA:asa;
       let heg=hrg*fw+hsg*sw,hea=hra*fw+hsa*sw,aeg=arg*fw+asg*sw,aea=ara*fw+asa*sw;
       let ha=heg/lap,hd=hea/lap,aa=aeg/lap,ad=aea/lap,hav=parseFloat($('homeAdvInput')?.value)||lw.homeAdv;
       let hxg=Math.min(4.8,Math.max(0.2,ha*ad*lap*hav)),axg=Math.min(4.8,Math.max(0.2,aa*hd*lap));
-      if(($('weatherSelect')?.value)==='light_rain'){hxg*=0.92;axg*=0.92;}
       let he=computeElo(home),ae=computeElo(away),ed=he-ae,eb=1/(1+Math.pow(10,-ed/400));
-      return{homeXG:hxg,awayXG:axg,homeAttack:ha,homeDefense:hd,awayAttack:aa,awayDefense:ad,homeElo:he,awayElo:ae,eloDiff:ed,eloBoost:eb,formW:fw};
+      return{homeXG:hxg,awayXG:axg,homeAttack:ha,homeDefense:hd,awayAttack:aa,awayDefense:ad,homeElo:he,awayElo:ae,eloDiff:ed,eloBoost:eb};
     }
 
     const fact=n=>n<=1?1:n*fact(n-1);
-    const poisProb=(l,k)=>l<=0?(k===0?1:0):Math.exp(-l)*Math.pow(l,k)/fact(k);
-    function poissonScores(hxg,axg,mg=8){let sc=[],hw=0,d=0,aw=0;for(let h=0;h<=mg;h++)for(let a=0;a<=mg;a++){let p=poisProb(hxg,h)*poisProb(axg,a);if(h===a&&h<=2)p*=1.1;sc.push({home:h,away:a,prob:p});if(h>a)hw+=p;else if(h===a)d+=p;else aw+=p;}let t=hw+d+aw;hw/=t;d/=t;aw/=t;sc=sc.map(s=>({...s,prob:s.prob/t})).sort((a,b)=>b.prob-a.prob);return{scores:sc,homeWin:hw,draw:d,awayWin:aw};}
-    function monteCarloSim(hxg,axg,sims=18000){let cnt={},hw=0,d=0,aw=0,pr=l=>{let L=Math.exp(-l),p=1,k=0;do{k++;p*=Math.random();}while(p>L);return k-1;};for(let i=0;i<sims;i++){let h=pr(hxg),a=pr(axg),k=`${h}-${a}`;cnt[k]=(cnt[k]||0)+1;if(h>a)hw++;else if(h===a)d++;else aw++;}let sc=Object.entries(cnt).map(([k,v])=>{let[h,a]=k.split('-').map(Number);return{home:h,away:a,prob:v/sims};}).sort((a,b)=>b.prob-a.prob);return{scores:sc,homeWin:hw/sims,draw:d/sims,awayWin:aw/sims};}
-    async function trainTF(){if(tfModel)tfModel.dispose();let tx=[],ty=[];for(let i=0;i<600;i++){let ha=Math.random()*2+0.4,hd=Math.random()*2+0.4,aa=Math.random()*2+0.4,ad=Math.random()*2+0.4,lap=1.4,hx=ha*ad*lap*1.2,ax=aa*hd*lap,hw=0,dr=0,tot=0;for(let h=0;h<=5;h++)for(let a=0;a<=5;a++){let p=poisProb(hx,h)*poisProb(ax,a);tot+=p;if(h>a)hw+=p;else if(h===a)dr+=p;}hw/=tot;dr/=tot;let r=Math.random();if(r<hw)ty.push([1,0,0]);else if(r<hw+dr)ty.push([0,1,0]);else ty.push([0,0,1]);tx.push([ha,hd,aa,ad]);}let xs=tf.tensor2d(tx),ys=tf.tensor2d(ty);tfModel=tf.sequential();tfModel.add(tf.layers.dense({units:8,activation:'relu',inputShape:[4]}));tfModel.add(tf.layers.dense({units:4,activation:'relu'}));tfModel.add(tf.layers.dense({units:3,activation:'softmax'}));tfModel.compile({optimizer:tf.train.adam(0.008),loss:'categoricalCrossentropy'});await tfModel.fit(xs,ys,{epochs:25,shuffle:true,verbose:0});xs.dispose();ys.dispose();tfTrained=true;}
-    function predictTF(ha,hd,aa,ad){if(!tfModel)return null;let i=tf.tensor2d([[ha,hd,aa,ad]]);let p=tfModel.predict(i).dataSync();i.dispose();return{homeWin:p[0],draw:p[1],awayWin:p[2]};}
+    const pois=(l,k)=>l<=0?(k===0?1:0):Math.exp(-l)*Math.pow(l,k)/fact(k);
+    function poissonScores(hxg,axg,mg=8){let sc=[],hw=0,d=0,aw=0;for(let h=0;h<=mg;h++)for(let a=0;a<=mg;a++){let p=pois(hxg,h)*pois(axg,a);if(h===a&&h<=2)p*=1.1;sc.push({home:h,away:a,prob:p});if(h>a)hw+=p;else if(h===a)d+=p;else aw+=p;}let t=hw+d+aw;hw/=t;d/=t;aw/=t;sc=sc.map(s=>({...s,prob:s.prob/t})).sort((a,b)=>b.prob-a.prob);return{scores:sc,homeWin:hw,draw:d,awayWin:aw};}
+    function mcSim(hxg,axg,sims=18000){let cnt={},hw=0,d=0,aw=0,pr=l=>{let L=Math.exp(-l),p=1,k=0;do{k++;p*=Math.random();}while(p>L);return k-1;};for(let i=0;i<sims;i++){let h=pr(hxg),a=pr(axg),k=`${h}-${a}`;cnt[k]=(cnt[k]||0)+1;if(h>a)hw++;else if(h===a)d++;else aw++;}let sc=Object.entries(cnt).map(([k,v])=>{let[h,a]=k.split('-').map(Number);return{home:h,away:a,prob:v/sims};}).sort((a,b)=>b.prob-a.prob);return{scores:sc,homeWin:hw/sims,draw:d/sims,awayWin:aw/sims};}
+    async function trainTF(){if(tfModel)tfModel.dispose();let tx=[],ty=[];for(let i=0;i<600;i++){let ha=Math.random()*2+0.4,hd=Math.random()*2+0.4,aa=Math.random()*2+0.4,ad=Math.random()*2+0.4,lap=1.4,hx=ha*ad*lap*1.2,ax=aa*hd*lap,hw=0,dr=0,tot=0;for(let h=0;h<=5;h++)for(let a=0;a<=5;a++){let p=pois(hx,h)*pois(ax,a);tot+=p;if(h>a)hw+=p;else if(h===a)dr+=p;}hw/=tot;dr/=tot;let r=Math.random();if(r<hw)ty.push([1,0,0]);else if(r<hw+dr)ty.push([0,1,0]);else ty.push([0,0,1]);tx.push([ha,hd,aa,ad]);}let xs=tf.tensor2d(tx),ys=tf.tensor2d(ty);tfModel=tf.sequential();tfModel.add(tf.layers.dense({units:8,activation:'relu',inputShape:[4]}));tfModel.add(tf.layers.dense({units:4,activation:'relu'}));tfModel.add(tf.layers.dense({units:3,activation:'softmax'}));tfModel.compile({optimizer:tf.train.adam(0.008),loss:'categoricalCrossentropy'});await tfModel.fit(xs,ys,{epochs:25,shuffle:true,verbose:0});xs.dispose();ys.dispose();tfTrained=true;}
 
-    async function runFullPrediction(home,away){
+    async function runPrediction(home,away){
       let xg=computeXG(home,away);if(!xg)return null;lastXG=xg;
-      let pr=poissonScores(xg.homeXG,xg.awayXG,8),mr=monteCarloSim(xg.homeXG,xg.awayXG,18000);
-      let nn=null;if(tfTrained)nn=predictTF(xg.homeAttack,xg.homeDefense,xg.awayAttack,xg.awayDefense);
-      let eh=(pr.homeWin*0.4+mr.homeWin*0.3+(nn?nn.homeWin:pr.homeWin)*0.3),ed=(pr.draw*0.4+mr.draw*0.3+(nn?nn.draw:pr.draw)*0.3),ea=1-eh-ed;
-      let ebw=lw.eloBlendW||0.12,eah=eh*(1-ebw)+xg.eloBoost*ebw,eaa=ea*(1-ebw)+(1-xg.eloBoost)*ebw,t=eah+ed+eaa;eh=eah/t;ed=ed/t;ea=eaa/t;
+      let pr=poissonScores(xg.homeXG,xg.awayXG,8),mr=mcSim(xg.homeXG,xg.awayXG,18000);
+      let eh=(pr.homeWin*0.4+mr.homeWin*0.3+pr.homeWin*0.3),ed=(pr.draw*0.4+mr.draw*0.3+pr.draw*0.3),ea=1-eh-ed;
+      let ebw=lw.eloBlendW,eah=eh*(1-ebw)+xg.eloBoost*ebw,eaa=ea*(1-ebw)+(1-xg.eloBoost)*ebw,t=eah+ed+eaa;eh=eah/t;ed=ed/t;ea=eaa/t;
       let es=pr.scores.map(s=>({...s,prob:s.prob*0.6+(mr.scores.find(m=>m.home===s.home&&m.away===s.away)?.prob||0)*0.4}));
       let tot=es.reduce((a,b)=>a+b.prob,0);es=es.map(s=>({...s,prob:s.prob/tot})).sort((a,b)=>b.prob-a.prob);
-      return{xg,poisson:pr,montecarlo:mr,neural:nn,ensemble:{scores:es,homeWin:eh,draw:ed,awayWin:ea,asianHandicap:calculateAsianHandicap(eh,ed,ea,currentAsianLine),doubleChance:calculateDoubleChance(eh,ed,ea),eloBoost:xg.eloBoost,eloDiff:xg.eloDiff}};
+      let ah=calcAH(eh,ed,ea,currentAsianLine),dc=calcDC(eh,ed,ea);
+      return{xg,poisson:pr,montecarlo:mr,ensemble:{scores:es,homeWin:eh,draw:ed,awayWin:ea,asianHandicap:ah,doubleChance:dc,eloBoost:xg.eloBoost,eloDiff:xg.eloDiff}};
     }
 
-    function buildModelCard(title,modelRes,isEnsemble=false,topN=4){let scores=modelRes.scores.slice(0,topN),allScores=modelRes.scores.slice(0,10),asianHtml='',doubleHtml='',eloHtml='';if(isEnsemble&&modelRes.asianHandicap&&modelRes.doubleChance){asianHtml=`<div class="outcome-item"><div class="label">🌏 AH ${modelRes.asianHandicap.line}</div><div class="value" style="font-size:0.7rem">🏠 ${(modelRes.asianHandicap.homeCover*100).toFixed(1)}%<br>✈️ ${(modelRes.asianHandicap.awayCover*100).toFixed(1)}%</div></div>`;doubleHtml=`<div class="outcome-item"><div class="label">🎲 DC</div><div class="value" style="font-size:0.7rem">1X ${(modelRes.doubleChance.homeOrDraw*100).toFixed(1)}%<br>X2 ${(modelRes.doubleChance.awayOrDraw*100).toFixed(1)}%</div></div>`;if(modelRes.eloDiff!=null)eloHtml=`<div class="outcome-item"><div class="label">⚡ Elo Diff</div><div class="value" style="font-size:0.7rem">${modelRes.eloDiff>0?'+':''}${modelRes.eloDiff}</div></div>`;}return `<div class="model-card${isEnsemble?' ensemble':''}"><h4 style="color:${isEnsemble?'var(--neon-yellow)':'var(--neon-cyan)'};">${title}</h4><div class="top-scores">${scores.map(s=>`<div class="score-badge"><strong>${s.home}-${s.away}</strong><br><small>${(s.prob*100).toFixed(1)}%</small></div>`).join('')}</div><div class="outcome-row"><div class="outcome-item"><div class="label">🏠 HOME</div><div class="value">${(modelRes.homeWin*100).toFixed(1)}%</div></div><div class="outcome-item"><div class="label">🤝 DRAW</div><div class="value">${(modelRes.draw*100).toFixed(1)}%</div></div><div class="outcome-item"><div class="label">✈️ AWAY</div><div class="value">${(modelRes.awayWin*100).toFixed(1)}%</div></div>${asianHtml}${doubleHtml}${eloHtml}</div><table class="prob-table"><tbody>${allScores.map(s=>`<tr><td>${s.home}-${s.away}</td><td>${(s.prob*100).toFixed(1)}%</td><td><span class="prob-bar" style="width:${Math.min(80,s.prob/allScores[0].prob*70)}px;"></span></td></tr>`).join('')}</tbody></table></div>`;}
-    function renderBettingMarkets(){if(!lastPred)return;let m=calcMarkets(lastPred.ensemble.scores),ah=lastPred.ensemble.asianHandicap,dc=lastPred.ensemble.doubleChance,html='';[{l:'🏠 HOME WIN',p:m.homeWin},{l:'🤝 DRAW',p:m.draw},{l:'✈️ AWAY WIN',p:m.awayWin},{l:'OVER 1.5',p:m.o15},{l:'UNDER 1.5',p:m.u15},{l:'OVER 2.5',p:m.o25},{l:'UNDER 2.5',p:m.u25},{l:'BTTS YES',p:m.bttsY},{l:'BTTS NO',p:m.bttsN}].forEach(x=>{html+=`<div class="betting-card ${x.p>0.6?'highlight':''}"><div>${x.l}</div><div>${(x.p*100).toFixed(1)}%</div><div>${(1/x.p).toFixed(2)}</div></div>`;});html+=`<div class="betting-card"><div>🌏 AH H-${ah.line}</div><div>🏠 ${(ah.homeCover*100).toFixed(1)}% | ✈️ ${(ah.awayCover*100).toFixed(1)}%</div></div>`;html+=`<div class="betting-card"><div>🎲 1X</div><div>${(dc.homeOrDraw*100).toFixed(1)}%</div></div>`;html+=`<div class="betting-card"><div>🎲 X2</div><div>${(dc.awayOrDraw*100).toFixed(1)}%</div></div>`;$('bettingMarkets').innerHTML=html;}
+    function buildCard(title,res,ens=false,topN=4){let scores=res.scores.slice(0,topN),all=res.scores.slice(0,10),ahHtml='',dcHtml='',eloHtml='';
+      if(ens&&res.asianHandicap&&res.doubleChance){ahHtml=`<div class="outcome-item"><div class="label">🌏 AH ${res.asianHandicap.line}</div><div class="value" style="font-size:0.7rem">🏠 ${(res.asianHandicap.homeCover*100).toFixed(1)}%<br>✈️ ${(res.asianHandicap.awayCover*100).toFixed(1)}%</div></div>`;dcHtml=`<div class="outcome-item"><div class="label">🎲 DC</div><div class="value" style="font-size:0.7rem">1X ${(res.doubleChance.homeOrDraw*100).toFixed(1)}%<br>X2 ${(res.doubleChance.awayOrDraw*100).toFixed(1)}%</div></div>`;if(res.eloDiff!=null)eloHtml=`<div class="outcome-item"><div class="label">⚡ Elo</div><div class="value" style="font-size:0.7rem">${res.eloDiff>0?'+':''}${res.eloDiff}</div></div>`;}
+      return `<div class="model-card${ens?' ensemble':''}"><h4 style="color:${ens?'var(--neon-yellow)':'var(--neon-cyan)'};">${title}</h4><div class="top-scores">${scores.map(s=>`<div class="score-badge"><strong>${s.home}-${s.away}</strong><br><small>${(s.prob*100).toFixed(1)}%</small></div>`).join('')}</div><div class="outcome-row"><div class="outcome-item"><div class="label">🏠 HOME</div><div class="value">${(res.homeWin*100).toFixed(1)}%</div></div><div class="outcome-item"><div class="label">🤝 DRAW</div><div class="value">${(res.draw*100).toFixed(1)}%</div></div><div class="outcome-item"><div class="label">✈️ AWAY</div><div class="value">${(res.awayWin*100).toFixed(1)}%</div></div>${ahHtml}${dcHtml}${eloHtml}</div><table class="prob-table"><tbody>${all.map(s=>`<tr><td>${s.home}-${s.away}</td><td>${(s.prob*100).toFixed(1)}%</td><td><span class="prob-bar" style="width:${Math.min(80,s.prob/all[0].prob*70)}px;"></span></td></tr>`).join('')}</tbody></table></div>`;}
+
     function calcMarkets(scores){let hw=0,d=0,aw=0,o15=0,u15=0,o25=0,u25=0,by=0,bn=0;scores.forEach(s=>{if(s.home>s.away)hw+=s.prob;else if(s.home===s.away)d+=s.prob;else aw+=s.prob;let tg=s.home+s.away;if(tg>1.5)o15+=s.prob;else u15+=s.prob;if(tg>2.5)o25+=s.prob;else u25+=s.prob;if(s.home>0&&s.away>0)by+=s.prob;else bn+=s.prob;});return{homeWin:hw,draw:d,awayWin:aw,o15,u15,o25,u25,bttsY:by,bttsN:bn};}
-    function drawHeatmap(hxg,axg){let g=$('heatmapGrid');if(!g)return;let h='<div style="grid-column:1/9;text-align:center;font-size:0.6rem;">AWAY →</div>';for(let hi=0;hi<=7;hi++){h+=`<div style="font-size:0.5rem;">${hi}</div>`;for(let a=0;a<=7;a++){let p=poisProb(hxg,hi)*poisProb(axg,a),int=Math.min(0.85,p*14);h+=`<div class="heatmap-cell" style="background:rgba(0,255,255,${int});">${hi}-${a}</div>`;}}g.innerHTML=h;}
+    function renderBettingMarkets(){if(!lastPred)return;let m=calcMarkets(lastPred.ensemble.scores),ah=lastPred.ensemble.asianHandicap,dc=lastPred.ensemble.doubleChance,html='';[{l:'🏠 HOME',p:m.homeWin},{l:'🤝 DRAW',p:m.draw},{l:'✈️ AWAY',p:m.awayWin},{l:'O1.5',p:m.o15},{l:'U1.5',p:m.u15},{l:'O2.5',p:m.o25},{l:'U2.5',p:m.u25},{l:'BTTS Y',p:m.bttsY},{l:'BTTS N',p:m.bttsN}].forEach(x=>{html+=`<div class="betting-card ${x.p>0.6?'highlight':''}"><div>${x.l}</div><div>${(x.p*100).toFixed(1)}%</div></div>`;});html+=`<div class="betting-card"><div>🌏 AH H-${ah.line}</div><div>🏠 ${(ah.homeCover*100).toFixed(1)}% | ✈️ ${(ah.awayCover*100).toFixed(1)}%</div></div>`;html+=`<div class="betting-card"><div>🎲 1X</div><div>${(dc.homeOrDraw*100).toFixed(1)}%</div></div>`;html+=`<div class="betting-card"><div>🎲 X2</div><div>${(dc.awayOrDraw*100).toFixed(1)}%</div></div>`;$('bettingMarkets').innerHTML=html;}
+    function drawHeatmap(hxg,axg){let g=$('heatmapGrid');if(!g)return;let h='<div style="grid-column:1/9;text-align:center;">AWAY →</div>';for(let hi=0;hi<=7;hi++){h+=`<div>${hi}</div>`;for(let a=0;a<=7;a++){let p=pois(hxg,hi)*pois(axg,a);h+=`<div class="heatmap-cell" style="background:rgba(0,255,255,${Math.min(0.85,p*14)});">${hi}-${a}</div>`;}}g.innerHTML=h;}
 
-    async function calculateAll(){if(!selHome||!selAway){$('resultsContainer').innerHTML='<p style="color:var(--muted);">Select both teams</p>';return;}let pred=await runFullPrediction(selHome,selAway);if(!pred)return;lastPred=pred;let html=buildModelCard('📊 POISSON',pred.poisson,false,4)+buildModelCard('🎲 MONTE CARLO',pred.montecarlo,false,4);if(pred.neural)html+=`<div class="model-card"><h4 style="color:var(--neon-magenta);">🧠 NEURAL NET</h4><div class="outcome-row"><div class="outcome-item"><div class="label">🏠</div><div class="value">${(pred.neural.homeWin*100).toFixed(1)}%</div></div><div class="outcome-item"><div class="label">🤝</div><div class="value">${(pred.neural.draw*100).toFixed(1)}%</div></div><div class="outcome-item"><div class="label">✈️</div><div class="value">${(pred.neural.awayWin*100).toFixed(1)}%</div></div></div></div>`;html+=buildModelCard('⭐ ENSEMBLE',pred.ensemble,true,4);$('resultsContainer').innerHTML=html;drawHeatmap(pred.xg.homeXG,pred.xg.awayXG);renderBettingMarkets();}
-    async function trainAndPredictTF(){if(!selHome||!selAway){alert('Select teams');return;}if(!tfTrained){$('resultsContainer').innerHTML='<p style="color:cyan;"><span class="spinner"></span> Training NN...</p>';await trainTF();}calculateAll();}
+    async function calculateAll(){if(!selHome||!selAway){$('resultsContainer').innerHTML='<p style="color:var(--muted);">Select teams</p>';return;}let pred=await runPrediction(selHome,selAway);if(!pred)return;lastPred=pred;$('resultsContainer').innerHTML=buildCard('📊 POISSON',pred.poisson)+buildCard('🎲 MONTE CARLO',pred.montecarlo)+buildCard('⭐ ENSEMBLE',pred.ensemble,true);drawHeatmap(pred.xg.homeXG,pred.xg.awayXG);renderBettingMarkets();}
+    async function trainAndPredictTF(){if(!tfTrained){$('resultsContainer').innerHTML='<p style="color:cyan;"><span class="spinner"></span> Training...</p>';await trainTF();}calculateAll();}
 
-    function updateManualTeam(side){let select=$(side==='home'?'homeSelect':'awaySelect');let t=allTeams.find(x=>x.name===select.value);if(side==='home')selHome=t;else selAway=t;if(t){let sDiv=$(side+'Stats'),formNote='';if(t.recentGF!=null)formNote=`<div style="font-size:0.4rem;color:var(--half-win-color);">📊 Recent: ${t.recentGF.toFixed(1)}/${t.recentGA.toFixed(1)}</div>`;sDiv.innerHTML=`<div class="stat-row"><div class="stat-item"><label>P</label><div>${t.played}</div></div><div class="stat-item"><label>W</label><div>${t.won}</div></div><div class="stat-item"><label>D</label><div>${t.draw}</div></div><div class="stat-item"><label>L</label><div>${t.lost}</div></div></div><div class="stat-row"><div class="stat-item"><label>GF</label><div>${t.gf}</div></div><div class="stat-item"><label>GA</label><div>${t.ga}</div></div><div class="stat-item"><label>GD</label><div>${t.gd}</div></div></div>${formNote}`;$(side+'Elo').innerHTML=`⚡ Elo: ${computeElo(t)}`;}else{$(side+'Stats').innerHTML='<p style="color:var(--muted);">Awaiting</p>';$(side+'Elo').innerHTML='';}if(selHome&&selAway)calculateAll();}
+    function updateManualTeam(side){let s=$(side==='home'?'homeSelect':'awaySelect');let t=allTeams.find(x=>x.name===s.value);if(side==='home')selHome=t;else selAway=t;if(t){let d=$(side+'Stats'),fn='';if(t.recentGF!=null)fn=`<div style="font-size:0.4rem;color:var(--half-win-color);">Recent: ${t.recentGF.toFixed(1)}/${t.recentGA.toFixed(1)}</div>`;d.innerHTML=`<div class="stat-row"><div class="stat-item"><label>P</label><div>${t.played}</div></div><div class="stat-item"><label>W</label><div>${t.won}</div></div><div class="stat-item"><label>GF</label><div>${t.gf}</div></div><div class="stat-item"><label>GA</label><div>${t.ga}</div></div></div>${fn}`;$(side+'Elo').innerHTML=`⚡ Elo: ${computeElo(t)}`;}else{$(side+'Stats').innerHTML='<p>Awaiting</p>';$(side+'Elo').innerHTML='';}if(selHome&&selAway)calculateAll();}
 
-    async function fetchManualStandings(){let comp=$('manualCompSelect').value;if(!comp)return;if(manSrc==='manual'){$('manualInputSection').classList.remove('hidden');refreshSavedLeagues();return;}try{let data=await apiFetch('football-data',`/competitions/${comp}/standings`);allTeams=[];let entries=data.standings[0]?.table||[];entries.forEach(e=>{let gf=e.goalsFor,ga=e.goalsAgainst,p=e.playedGames;allTeams.push({name:e.team.name,shortName:e.team.shortName,played:p,won:e.won,draw:e.draw,lost:e.lost,gf,ga,gd:e.goalDifference,points:e.points,position:e.position,recentGF:gf/Math.max(1,p),recentGA:ga/Math.max(1,p)});});currentLeagueName=data.competition?.name||comp;populateTeamSelectors();let tg=allTeams.reduce((s,t)=>s+t.gf,0),tm=allTeams.reduce((s,t)=>s+t.played,0)/2;$('computedAvg').value=(tg/Math.max(1,tm)).toFixed(2);$('standingsPreview').innerHTML=`✅ ${currentLeagueName} - ${allTeams.length} teams`;autoCalibrate();}catch(e){alert('API error');}}
-    function populateTeamSelectors(){let opts='<option value="">-- Select --</option>';allTeams.forEach(t=>opts+=`<option value="${t.name}">${t.name}</option>`);$('homeSelect').innerHTML=opts;$('awaySelect').innerHTML=opts;}
-    function autoCalibrate(){let haMap={WC:1.15,CL:1.2,BL1:1.22,DED:1.2,BSA:1.14,PD:1.18,FL1:1.19,ELC:1.16,PPL:1.17,EC:1.15,SA:1.16,PL:1.2};let c=$('manualCompSelect').value;if(haMap[c])$('homeAdvInput').value=haMap[c];}
-    function parseManualTable(){let raw=$('manualTableInput').value;if(!raw)return;let lines=raw.split('\n');allTeams=[];for(let line of lines){let parts=line.split('|').map(s=>s.trim()).filter(s=>s);if(parts.length<8)continue;let gls=parts[6].split(':');if(gls.length<2)continue;let gf=parseInt(gls[0]),ga=parseInt(gls[1]),p=parseInt(parts[2]);allTeams.push({name:parts[1],played:p,won:parseInt(parts[3]),draw:parseInt(parts[4]),lost:parseInt(parts[5]),gf,ga,gd:gf-ga,points:parseInt(parts[7]),position:parseInt(parts[0]),recentGF:gf/Math.max(1,p),recentGA:ga/Math.max(1,p)});}if(allTeams.length)populateTeamSelectors();let tg=allTeams.reduce((s,t)=>s+t.gf,0),tm=allTeams.reduce((s,t)=>s+t.played,0)/2;$('computedAvg').value=(tg/Math.max(1,tm)).toFixed(2);$('manualParseMsg').innerHTML='✅ Parsed';}
-    function saveManualLeague(){let name=$('manualLeagueName').value.trim(),raw=$('manualTableInput').value;if(!name||!raw)return;let leagues=JSON.parse(localStorage.getItem(LLK)||'{}');leagues[name]={raw,teams:allTeams,date:Date.now()};localStorage.setItem(LLK,JSON.stringify(leagues));refreshSavedLeagues();}
-    function refreshSavedLeagues(){let sec=$('savedLeaguesSection'),leagues=JSON.parse(localStorage.getItem(LLK)||'{}'),keys=Object.keys(leagues);if(!keys.length){sec.classList.add('hidden');return;}sec.classList.remove('hidden');sec.innerHTML=keys.map(k=>`<span class="saved-league-item" onclick="loadSavedLeague('${k.replace(/'/g,"\\'")}')">${k}</span>`).join('')+'<span class="saved-league-item" onclick="deleteAllLeagues()">🗑</span>';}
-    window.loadSavedLeague=function(name){let leagues=JSON.parse(localStorage.getItem(LLK)||'{}'),data=leagues[name];if(data){allTeams=data.teams;populateTeamSelectors();$('manualTableInput').value=data.raw;$('computedAvg').value=(allTeams.reduce((s,t)=>s+t.gf,0)/(allTeams.reduce((s,t)=>s+t.played,0)/2)).toFixed(2);$('standingsPreview').innerHTML=`✅ Loaded ${name}`;selHome=selAway=null;currentLeagueName=name;}};
-    window.deleteAllLeagues=function(){localStorage.removeItem(LLK);refreshSavedLeagues();};
+    async function fetchManualStandings(){let comp=$('manualCompSelect').value;if(!comp)return;try{let data=await apiFetch('football-data',`/competitions/${comp}/standings`);allTeams=[];(data.standings[0]?.table||[]).forEach(e=>{let gf=e.goalsFor,ga=e.goalsAgainst,p=e.playedGames;allTeams.push({name:e.team.name,played:p,won:e.won,draw:e.draw,lost:e.lost,gf,ga,gd:e.goalDifference,points:e.points,position:e.position,recentGF:gf/Math.max(1,p),recentGA:ga/Math.max(1,p)});});currentLeagueName=data.competition?.name||comp;populateSelectors();let tg=allTeams.reduce((s,t)=>s+t.gf,0),tm=allTeams.reduce((s,t)=>s+t.played,0)/2;$('computedAvg').value=(tg/Math.max(1,tm)).toFixed(2);$('standingsPreview').innerHTML=`✅ ${currentLeagueName} - ${allTeams.length} teams`;autoCalibrate();}catch(e){alert('API error');}}
+    function populateSelectors(){let o='<option value="">-- Select --</option>';allTeams.forEach(t=>o+=`<option value="${t.name}">${t.name}</option>`);$('homeSelect').innerHTML=o;$('awaySelect').innerHTML=o;}
+    function autoCalibrate(){let m={WC:1.15,CL:1.2,BL1:1.22,DED:1.2,BSA:1.14,PD:1.18,FL1:1.19,ELC:1.16,PPL:1.17,EC:1.15,SA:1.16,PL:1.2};let c=$('manualCompSelect').value;if(m[c])$('homeAdvInput').value=m[c];}
 
-    async function fetchRecentMatches(){if(!selHome||!selAway){alert('Select teams first');return;}try{let hn=selHome.name;let dh=await apiFetch('football-data',`/teams?name=${encodeURIComponent(hn)}`);if(dh.teams&&dh.teams.length>0){let tid=dh.teams[0].id;let dm=await apiFetch('football-data',`/teams/${tid}/matches?limit=5&status=FINISHED`);if(dm.matches&&dm.matches.length>0){let tgf=0,tga=0,c=0;dm.matches.forEach(m=>{let ih=m.homeTeam.id===tid,gf=ih?m.score.fullTime.home:m.score.fullTime.away,ga=ih?m.score.fullTime.away:m.score.fullTime.home;tgf+=gf;tga+=ga;c++;});if(c>0){if(selHome){selHome.recentGF=tgf/c;selHome.recentGA=tga/c;}teamFormData[hn]={recentGF:tgf/c,recentGA:tga/c};}}}showToast(`📜 Form fetched`,'success');updateManualTeam('home');if(selHome&&selAway)calculateAll();}catch(e){showToast('⚠️ Form fetch limited','error');}}
+    async function fetchAutoLeagueData(co=null){const comp=co||$('autoCompSelect').value;if(!comp)return null;const sel=$('autoStatus');if(sel)sel.innerHTML='<span class="spinner"></span> Loading...';try{let data=await apiFetch('football-data',`/competitions/${comp}/standings`);allTeams=[];(data.standings[0]?.table||[]).forEach(e=>{let gf=e.goalsFor,ga=e.goalsAgainst,p=e.playedGames;allTeams.push({name:e.team.name,played:p,won:e.won,draw:e.draw,lost:e.lost,gf,ga,gd:e.goalDifference,points:e.points,position:e.position,recentGF:gf/Math.max(1,p),recentGA:ga/Math.max(1,p)});});currentLeagueName=data.competition?.name||comp;let tg=allTeams.reduce((s,t)=>s+t.gf,0),tm=allTeams.reduce((s,t)=>s+t.played,0)/2;$('computedAvg').value=(tg/Math.max(1,tm)).toFixed(2);if(sel)sel.innerHTML='<span class="spinner"></span> Fetching fixtures...';let fd=await apiFetch('football-data',`/competitions/${comp}/matches?status=SCHEDULED&limit=12`);upcomingFix=fd.matches.map(m=>({home:m.homeTeam.name,away:m.awayTeam.name,date:m.utcDate}));if(!co)renderFixtures();if(sel)sel.innerHTML=`✅ ${currentLeagueName}: ${upcomingFix.length} fixtures`;return{comp,fixtures:upcomingFix,leagueName:currentLeagueName};}catch(e){if(sel)sel.innerHTML='❌ Error';return null;}}
+    function renderFixtures(){let c=$('fixtureList');if(!c||!upcomingFix.length)return;c.innerHTML=upcomingFix.map((f,i)=>`<div class="fixture-item"><div class="fixture-header"><div><strong>${f.home}</strong> vs <strong>${f.away}</strong><div class="fixture-date">📅 ${new Date(f.date).toLocaleString()}</div></div><div><button class="btn-primary btn-sm" onclick="predictAuto(${i})">🔮</button></div></div><div id="fixpred-${i}"></div></div>`).join('');}
+    window.predictAuto=async function(i){let f=upcomingFix[i];let ht=allTeams.find(t=>t.name===f.home),at=allTeams.find(t=>t.name===f.away);if(!ht||!at)return;selHome=ht;selAway=at;let pred=await runPrediction(selHome,selAway);if(!pred)return;lastPred=pred;let pd=document.getElementById(`fixpred-${i}`);if(pd)pd.innerHTML=buildCard('⭐ ENSEMBLE',pred.ensemble,true);};
+    window.autoPredictAll=function(){upcomingFix.forEach((_,i)=>predictAuto(i));};
 
-    function logManualResult(){if(!lastPred){alert('No prediction');return;}let hg=parseInt($('actualHomeGoals').value)||0,ag=parseInt($('actualAwayGoals').value)||0;calData.push({home:selHome.name,away:selAway.name,predicted:lastPred.ensemble.scores[0],actual:{home:hg,away:ag}});saveData();updateCalDisplay();$('learningInsights').innerHTML=`<div style="background:rgba(0,255,136,0.1);border-radius:8px;padding:0.3rem;">✅ Logged: ${hg}-${ag}</div>`;}
-    function logAutoResult(hn,an,ph,pa){let hg=parseInt(prompt(`Actual home goals for ${hn}:`,'0')||'0'),ag=parseInt(prompt(`Actual away goals for ${an}:`,'0')||'0');if(isNaN(hg)||isNaN(ag))return;calData.push({home:hn,away:an,predicted:{home:ph,away:pa},actual:{home:hg,away:ag}});saveData();updateCalDisplay();alert('Logged!');}
-    function selfLearn(){let v=calData.filter(c=>c.actual);if(v.length<3){alert('Need 3+ results');return;}let err=0;v.forEach(x=>{err+=Math.abs(x.predicted.home-x.actual.home)+Math.abs(x.predicted.away-x.actual.away);});let ae=err/v.length;if(ae>2.2)lw.formW=Math.min(0.9,lw.formW+0.03);else if(ae<1.5)lw.formW=Math.max(0.3,lw.formW-0.02);saveData();updateCalDisplay();$('learningInsights').innerHTML=`<div style="background:rgba(0,255,136,0.1);border-radius:8px;padding:0.3rem;">🧠 Learned: fw=${lw.formW.toFixed(2)}</div>`;}
-    function updateCalDisplay(){let v=calData.filter(c=>c.actual);$('calibrationStats').innerHTML=`<div class="stat-row"><div class="stat-item"><label>📊 Logged</label><div class="val">${v.length}</div></div><div class="stat-item"><label>📈 Active</label><div class="val">✅</div></div></div>`;}
+    async function fullAuto(comp){const r=await fetchAutoLeagueData(comp);if(!r||!r.fixtures.length)return{leagueName:r?.leagueName||comp,fixtures:[],nc:0};const lp=[];let nc=0;for(const f of r.fixtures){if(await isDup(f.home,f.away,r.leagueName))continue;let ht=allTeams.find(t=>t.name===f.home),at=allTeams.find(t=>t.name===f.away);if(!ht){let ag=allTeams.reduce((s,t)=>s+t.gf,0)/Math.max(1,allTeams.length);ht={name:f.home,played:20,won:8,draw:5,lost:7,gf:Math.round(ag),ga:Math.round(ag),gd:0,recentGF:ag,recentGA:ag};}if(!at){let ag=allTeams.reduce((s,t)=>s+t.gf,0)/Math.max(1,allTeams.length);at={name:f.away,played:20,won:7,draw:5,lost:8,gf:Math.round(ag),ga:Math.round(ag),gd:0,recentGF:ag,recentGA:ag};}selHome=ht;selAway=at;const pred=await runPrediction(selHome,selAway);if(pred){const m=calcMarkets(pred.ensemble.scores),ah=pred.ensemble.asianHandicap,dc=pred.ensemble.doubleChance;const rec={homeTeam:f.home,awayTeam:f.away,leagueName:r.leagueName||comp,matchDate:new Date(f.date).toLocaleDateString(),predictedScores:pred.ensemble.scores.slice(0,4).map(s=>({home:s.home,away:s.away,prob:(s.prob*100).toFixed(1)})),predictedMarkets:{homeWin:(m.homeWin*100).toFixed(1),draw:(m.draw*100).toFixed(1),awayWin:(m.awayWin*100).toFixed(1),over25:(m.o25*100).toFixed(1),under25:(m.u25*100).toFixed(1),over15:(m.o15*100).toFixed(1),bttsY:(m.bttsY*100).toFixed(1),bttsN:(m.bttsN*100).toFixed(1)},predictedAsianHandicap:{line:ah.line,homeCover:(ah.homeCover*100).toFixed(1),awayCover:(ah.awayCover*100).toFixed(1)},predictedDoubleChance:{homeOrDraw:(dc.homeOrDraw*100).toFixed(1),awayOrDraw:(dc.awayOrDraw*100).toFixed(1)},xgHome:pred.xg.homeXG.toFixed(2),xgAway:pred.xg.awayXG.toFixed(2),eloDiff:pred.xg.eloDiff,ftHome:null,ftAway:null,status:'pending',marketResults:{},timestamp:Date.now()};await dbAdd(rec);lp.push(rec);nc++;}}return{leagueName:r.leagueName,fixtures:lp,newCount:nc,totalFixtures:r.fixtures.length};}
 
-    async function fetchAutoLeagueData(co=null){const comp=co||$('autoCompSelect').value;if(!comp){alert('Select league');return;}const sel=$('autoStatus');if(sel)sel.innerHTML='<span class="spinner"></span> Loading...';try{let data=await apiFetch('football-data',`/competitions/${comp}/standings`);allTeams=[];let entries=data.standings[0]?.table||[];entries.forEach(e=>{let gf=e.goalsFor,ga=e.goalsAgainst,p=e.playedGames;allTeams.push({name:e.team.name,shortName:e.team.shortName||e.team.name,played:p,won:e.won,draw:e.draw,lost:e.lost,gf,ga,gd:e.goalDifference,points:e.points,position:e.position,recentGF:gf/Math.max(1,p),recentGA:ga/Math.max(1,p)});});currentLeagueName=data.competition?.name||comp;let tg=allTeams.reduce((s,t)=>s+t.gf,0),tm=allTeams.reduce((s,t)=>s+t.played,0)/2;$('computedAvg').value=(tg/Math.max(1,tm)).toFixed(2);if(sel)sel.innerHTML='<span class="spinner"></span> Fetching fixtures...';let fd=await apiFetch('football-data',`/competitions/${comp}/matches?status=SCHEDULED&limit=12`);upcomingFix=fd.matches.map(m=>({home:m.homeTeam.name,away:m.awayTeam.name,date:m.utcDate}));if(!co)renderAutoFixtures();if(sel)sel.innerHTML=`✅ ${currentLeagueName}: ${upcomingFix.length} fixtures`;return{comp,fixtures:upcomingFix,leagueName:currentLeagueName};}catch(e){if(sel)sel.innerHTML='❌ Error';return null;}}
-    function renderAutoFixtures(){let c=$('fixtureList');if(!c||!upcomingFix.length)return;c.innerHTML=upcomingFix.map((f,i)=>`<div class="fixture-item"><div class="fixture-header"><div><strong>${f.home}</strong> vs <strong>${f.away}</strong><div class="fixture-date">📅 ${new Date(f.date).toLocaleString()}</div></div><div><button class="btn-primary btn-sm" onclick="predictAutoFixture(${i})">🔮</button><button class="save-hist-btn" onclick="saveAutoFixtureToHistory(${i})">💾</button></div></div><div id="fixpred-${i}"></div></div>`).join('');}
-    window.predictAutoFixture=async function(i){let f=upcomingFix[i];let ht=allTeams.find(t=>t.name===f.home),at=allTeams.find(t=>t.name===f.away);if(!ht){let ag=allTeams.reduce((s,t)=>s+t.gf,0)/Math.max(1,allTeams.length);ht={name:f.home,played:20,won:8,draw:5,lost:7,gf:Math.round(ag),ga:Math.round(ag),gd:0,recentGF:ag,recentGA:ag};}if(!at){let ag=allTeams.reduce((s,t)=>s+t.gf,0)/Math.max(1,allTeams.length);at={name:f.away,played:20,won:7,draw:5,lost:8,gf:Math.round(ag),ga:Math.round(ag),gd:0,recentGF:ag,recentGA:ag};}selHome=ht;selAway=at;let pred=await runFullPrediction(selHome,selAway);if(!pred)return;lastPred=pred;upcomingFix[i]._pred=pred;let html=buildModelCard('📊 POISSON',pred.poisson,false,4)+buildModelCard('🎲 MC',pred.montecarlo,false,4);if(pred.neural)html+=`<div class="model-card"><h4 style="color:var(--neon-magenta);">🧠 NN</h4><div class="outcome-row"><div class="outcome-item"><div>🏠</div><div>${(pred.neural.homeWin*100).toFixed(1)}%</div></div><div class="outcome-item"><div>🤝</div><div>${(pred.neural.draw*100).toFixed(1)}%</div></div><div class="outcome-item"><div>✈️</div><div>${(pred.neural.awayWin*100).toFixed(1)}%</div></div></div></div>`;html+=buildModelCard('⭐ ENSEMBLE',pred.ensemble,true,4);let pd=document.getElementById(`fixpred-${i}`);if(pd)pd.innerHTML=html;};
-    window.autoPredictAll=function(){upcomingFix.forEach((_,i)=>predictAutoFixture(i));};
+    async function fetchNextLeague(isR=false){if(autoScanActive)return;autoScanActive=true;const comp=ALL_LEAGUES[sequentialLeagueIndex];if(isComplete(comp)&&!isR){updateSeqProgress(sequentialLeagueIndex,'skipped');sequentialLeagueIndex=(sequentialLeagueIndex+1)%ALL_LEAGUES.length;autoScanActive=false;return;}$('autoScanStatus').textContent=`🔄 ${comp}... (${sequentialLeagueIndex+1}/${ALL_LEAGUES.length})`;$('autoScanStatus').className='auto-scan-status scanning';updateSeqProgress(sequentialLeagueIndex,'active');try{const r=await fullAuto(comp);if(r){const ap=getPreds();ap[comp]={leagueName:r.leagueName,fixtures:r.fixtures,updatedAt:Date.now()};savePreds(ap);if(r.newCount===0&&r.totalFixtures>0)markComplete(comp,r.totalFixtures);}}catch(e){console.error(e);}updateSeqProgress(sequentialLeagueIndex,'done');sequentialLeagueIndex=(sequentialLeagueIndex+1)%ALL_LEAGUES.length;autoScanActive=false;const ac=ALL_LEAGUES.every(c=>isComplete(c));$('autoScanStatus').textContent=ac?'✅ All complete':`✅ ${comp} done`;$('autoScanStatus').className=ac?'auto-scan-status':'auto-scan-status';renderPredictionsPage();renderHistoryCards();refreshAnalytics();if(ac&&!isR){clearInterval(refreshIntervalId);clearInterval(countdownIntervalId);showToast('🎉 All 12 leagues loaded!','success');}}
 
-    async function fullAutoPredictForLeague(comp){const result=await fetchAutoLeagueData(comp);if(!result||!result.fixtures.length)return{leagueName:result?.leagueName||comp,fixtures:[],nc:0,sc:0};const lp=[];let nc=0,sc=0;for(const f of result.fixtures){if(await isDuplicateMatch(f.home,f.away,result.leagueName)){sc++;continue;}let ht=allTeams.find(t=>t.name===f.home),at=allTeams.find(t=>t.name===f.away);if(!ht){let ag=allTeams.reduce((s,t)=>s+t.gf,0)/Math.max(1,allTeams.length);ht={name:f.home,played:20,won:8,draw:5,lost:7,gf:Math.round(ag),ga:Math.round(ag),gd:0,recentGF:ag,recentGA:ag};}if(!at){let ag=allTeams.reduce((s,t)=>s+t.gf,0)/Math.max(1,allTeams.length);at={name:f.away,played:20,won:7,draw:5,lost:8,gf:Math.round(ag),ga:Math.round(ag),gd:0,recentGF:ag,recentGA:ag};}selHome=ht;selAway=at;const pred=await runFullPrediction(selHome,selAway);if(pred){const m=calcMarkets(pred.ensemble.scores),ah=pred.ensemble.asianHandicap,dc=pred.ensemble.doubleChance;const r={homeTeam:f.home,awayTeam:f.away,leagueName:result.leagueName||comp,matchDate:new Date(f.date).toLocaleDateString(),matchTime:new Date(f.date).toLocaleTimeString(),predictedScores:pred.ensemble.scores.slice(0,4).map(s=>({home:s.home,away:s.away,prob:(s.prob*100).toFixed(1)})),predictedMarkets:{homeWin:(m.homeWin*100).toFixed(1),draw:(m.draw*100).toFixed(1),awayWin:(m.awayWin*100).toFixed(1),over25:(m.o25*100).toFixed(1),under25:(m.u25*100).toFixed(1),over15:(m.o15*100).toFixed(1),bttsY:(m.bttsY*100).toFixed(1),bttsN:(m.bttsN*100).toFixed(1)},predictedAsianHandicap:{line:ah.line,homeCover:(ah.homeCover*100).toFixed(1),awayCover:(ah.awayCover*100).toFixed(1)},predictedDoubleChance:{homeOrDraw:(dc.homeOrDraw*100).toFixed(1),awayOrDraw:(dc.awayOrDraw*100).toFixed(1)},xgHome:pred.xg.homeXG.toFixed(2),xgAway:pred.xg.awayXG.toFixed(2),eloDiff:pred.xg.eloDiff,eloBoost:pred.xg.eloBoost?.toFixed(3),ftHome:null,ftAway:null,status:'pending',marketResults:{},asianHandicapResult:null,doubleChanceResults:{},correctScoreHit:null,notes:'',timestamp:Date.now(),savedTimestamp:new Date().toLocaleString()};await dbAdd(r);lp.push(r);nc++;}}return{leagueName:result.leagueName,fixtures:lp,newCount:nc,skippedCount:sc,totalFixtures:result.fixtures.length};}
+    async function refreshAllPredictions(){if(autoScanActive){showToast('⚠️ Already scanning','error');return;}$('refreshStatus').textContent='🔄 Refreshing...';clearCompletion();sequentialLeagueIndex=0;const ap=getPreds();for(const k of Object.keys(ap))delete ap[k];savePreds(ap);for(let i=0;i<ALL_LEAGUES.length;i++){sequentialLeagueIndex=i;await fetchNextLeague(true);if(i<ALL_LEAGUES.length-1){$('refreshStatus').textContent=`⏳ Waiting 30s (${i+2}/${ALL_LEAGUES.length})...`;await new Promise(r=>setTimeout(r,GAP_MS));}}$('refreshStatus').textContent='✅ Done!';setTimeout(()=>{$('refreshStatus').textContent='';},5000);startAutoRefresh();}
 
-    async function fetchNextLeagueSequentially(isR=false){if(autoScanActive)return;autoScanActive=true;const comp=ALL_LEAGUES[sequentialLeagueIndex];if(isLeagueComplete(comp)&&!isR){updateSeqProgress(sequentialLeagueIndex,'skipped');sequentialLeagueIndex=(sequentialLeagueIndex+1)%ALL_LEAGUES.length;autoScanActive=false;return;}$('autoScanStatus').textContent=`🔄 ${comp}... (${sequentialLeagueIndex+1}/${ALL_LEAGUES.length})`;$('autoScanStatus').className='auto-scan-status scanning';updateSeqProgress(sequentialLeagueIndex,'active');try{const result=await fullAutoPredictForLeague(comp);if(result){const ap=getLivePredictions();ap[comp]={leagueName:result.leagueName,fixtures:result.fixtures,updatedAt:Date.now()};saveLivePredictions(ap);if(result.skippedCount>=result.totalFixtures&&result.totalFixtures>0)markLeagueComplete(comp,result.totalFixtures);}}catch(e){console.error(e);}updateSeqProgress(sequentialLeagueIndex,'done');sequentialLeagueIndex=(sequentialLeagueIndex+1)%ALL_LEAGUES.length;autoScanActive=false;const ac=ALL_LEAGUES.every(c=>isLeagueComplete(c));$('autoScanStatus').textContent=ac?'✅ All complete':`✅ ${comp} done`;$('autoScanStatus').className=ac?'auto-scan-status complete':'auto-scan-status';renderPredictionsPage();renderHistoryCards();refreshAnalytics();if(ac&&!isR){if(refreshIntervalId)clearInterval(refreshIntervalId);if(countdownIntervalId)clearInterval(countdownIntervalId);showToast('🎉 All 12 leagues loaded!','success');}}
+    function startAutoRefresh(){if(refreshIntervalId)clearInterval(refreshIntervalId);if(countdownIntervalId)clearInterval(countdownIntervalId);countdownSeconds=30;updateCountdown();updateSeqProgress();countdownIntervalId=setInterval(()=>{countdownSeconds--;updateCountdown();if(countdownSeconds<=0)countdownSeconds=30;},1000);refreshIntervalId=setInterval(async()=>{if(ALL_LEAGUES.every(c=>isComplete(c))){clearInterval(refreshIntervalId);clearInterval(countdownIntervalId);$('countdownTimer').textContent='All loaded ✓';return;}await fetchNextLeague();countdownSeconds=30;},GAP_MS);}
 
-    async function refreshAllPredictions(){if(autoScanActive){showToast('⚠️ Already scanning','error');return;}$('refreshStatus').textContent='🔄 Refreshing all 12 leagues (30s gap)...';clearCompletionTracker();sequentialLeagueIndex=0;const ap=getLivePredictions();for(const k of Object.keys(ap))delete ap[k];saveLivePredictions(ap);for(let i=0;i<ALL_LEAGUES.length;i++){sequentialLeagueIndex=i;await fetchNextLeagueSequentially(true);if(i<ALL_LEAGUES.length-1){$('refreshStatus').textContent=`⏳ Waiting 30s before next league (${i+2}/${ALL_LEAGUES.length})...`;await new Promise(r=>setTimeout(r,LEAGUE_GAP_MS));}}$('refreshStatus').textContent='✅ All 12 leagues refreshed!';setTimeout(()=>{$('refreshStatus').textContent='';},5000);startAutoRefreshCycle();}
+    function updateCountdown(){const el=$('countdownTimer');if(ALL_LEAGUES.every(c=>isComplete(c))){if(el)el.textContent='All loaded ✓';}else{if(el)el.textContent=`Next: ${ALL_LEAGUES[sequentialLeagueIndex]} in ${countdownSeconds}s`;}}
+    function updateSeqProgress(ai=-1,st=''){const c=$('seqProgress');if(!c)return;let h='';ALL_LEAGUES.forEach((comp,i)=>{let cls='seq-dot';if(isComplete(comp))cls+=' done';if(i===ai&&st==='active')cls+=' active';if(i===ai&&st==='skipped')cls+=' skipped';h+=`<span class="${cls}" data-league="${comp}"></span>`;});c.innerHTML=h;}
 
-    function startAutoRefreshCycle(){if(refreshIntervalId)clearInterval(refreshIntervalId);if(countdownIntervalId)clearInterval(countdownIntervalId);countdownSeconds=30;updateCountdownDisplay();updateSeqProgress();countdownIntervalId=setInterval(()=>{countdownSeconds--;updateCountdownDisplay();if(countdownSeconds<=0)countdownSeconds=30;},1000);refreshIntervalId=setInterval(async()=>{if(ALL_LEAGUES.every(c=>isLeagueComplete(c))){clearInterval(refreshIntervalId);clearInterval(countdownIntervalId);$('countdownTimer').textContent='All loaded ✓';return;}await fetchNextLeagueSequentially();countdownSeconds=30;},LEAGUE_GAP_MS);}
+    function renderPredictionsPage(){const c=$('predictionsPageContent');if(!c)return;const ap=getPreds(),lk=Object.keys(ap);if(!lk.length){c.innerHTML='<p style="color:var(--muted);text-align:center;padding:2rem;">No predictions yet.<br><br><button class="btn-refresh" onclick="refreshAllPredictions()">🔄 FETCH ALL 12 LEAGUES</button></p>';return;}let h='';lk.forEach(comp=>{const ld=ap[comp];if(!ld||!ld.fixtures||!ld.fixtures.length)return;h+=`<div class="predictions-page-card"><div class="predictions-league-header">🏆 ${ld.leagueName||comp} (${ld.fixtures.length}) ${isComplete(comp)?'✅':''}</div>`;ld.fixtures.forEach(r=>{const pm=r.predictedMarkets||{},ah=r.predictedAsianHandicap||{},dc=r.predictedDoubleChance||{};const d1=parseFloat(dc.homeOrDraw||50),d2=parseFloat(dc.awayOrDraw||50),pr=d1>=d2?'1X':'X2';const ts=r.predictedScores&&r.predictedScores.length>0?`${r.predictedScores[0].home}-${r.predictedScores[0].away}`:'--',tp=r.predictedScores&&r.predictedScores.length>0?r.predictedScores[0].prob:'--';h+=`<div class="prediction-match-row"><span class="team-names"><strong>${r.homeTeam}</strong> vs <strong>${r.awayTeam}</strong></span><span class="match-date">📅 ${r.matchDate}</span><span class="cs-top">🎯 CS: ${ts} (${tp}%)</span><span class="primary-pick">1: ${pm.homeWin||'--'}% X: ${pm.draw||'--'}% 2: ${pm.awayWin||'--'}%</span><span class="primary-pick">🎯 ${pr}: ${Math.max(d1,d2).toFixed(1)}%</span><span class="ah-info">🌏 AH H-${ah.line||0.25}: ${ah.homeCover||'--'}%</span><span class="status-badge badge-pending">⏳</span></div>`;});h+=`<div style="font-size:0.4rem;color:var(--muted);text-align:right;">Updated: ${new Date(ld.updatedAt).toLocaleTimeString()}</div></div>`;});c.innerHTML=h;}
 
-    function updateCountdownDisplay(){const el=$('countdownTimer');if(ALL_LEAGUES.every(c=>isLeagueComplete(c))){if(el)el.textContent='All loaded ✓';}else{if(el)el.textContent=`Next: ${ALL_LEAGUES[sequentialLeagueIndex]} in ${countdownSeconds}s`;}}
-    function updateSeqProgress(ai=-1,st=''){const c=$('seqProgress');if(!c)return;let h='';ALL_LEAGUES.forEach((comp,i)=>{let cls='seq-dot';if(isLeagueComplete(comp))cls+=' done';if(i===ai&&st==='active')cls+=' active';if(i===ai&&st==='skipped')cls+=' skipped';h+=`<span class="${cls}" data-league="${comp}"></span>`;});c.innerHTML=h;}
+    async function renderHistoryCards(){const c=$('historyCardsList');if(!c)return;try{const all=await dbAll();let filtered=all;const s=($('historySearch')?.value||'').toLowerCase();if(s)filtered=filtered.filter(r=>(r.homeTeam||'').toLowerCase().includes(s)||(r.awayTeam||'').toLowerCase().includes(s));if(currentHistoryFilter==='wins')filtered=filtered.filter(r=>r.status==='win');else if(currentHistoryFilter==='losses')filtered=filtered.filter(r=>r.status==='loss');else if(currentHistoryFilter==='pending')filtered=filtered.filter(r=>r.status==='pending');const sorted=filtered.sort((a,b)=>b.timestamp-a.timestamp);$('historyCount').textContent=`${sorted.length} records`;if(!sorted.length){c.innerHTML='<div class="empty-history">📭 No history yet</div>';return;}c.innerHTML=sorted.map((r,i)=>buildHC(r,i)).join('');}catch(e){c.innerHTML='<div class="empty-history">⚠️ Error loading history</div>';console.error(e);}}
 
-    function renderPredictionsPage(){const c=$('predictionsPageContent');if(!c)return;const ap=getLivePredictions(),lk=Object.keys(ap);if(!lk.length){c.innerHTML='<p style="color:var(--muted);text-align:center;padding:2rem;">No predictions yet.<br><br><button class="btn-refresh" onclick="refreshAllPredictions()">🔄 FETCH ALL 12 LEAGUES (30s gap)</button></p>';return;}let h='';lk.forEach(comp=>{const ld=ap[comp];if(!ld||!ld.fixtures||!ld.fixtures.length)return;h+=`<div class="predictions-page-card"><div class="predictions-league-header">🏆 ${ld.leagueName||comp} (${ld.fixtures.length}) ${isLeagueComplete(comp)?'✅':''}</div>`;ld.fixtures.forEach(r=>{const d1=parseFloat(r.predictedDoubleChance?.homeOrDraw||50),d2=parseFloat(r.predictedDoubleChance?.awayOrDraw||50),pr=d1>=d2?'1X':'X2';const ts=r.predictedScores&&r.predictedScores.length>0?`${r.predictedScores[0].home}-${r.predictedScores[0].away}`:'--',tp=r.predictedScores&&r.predictedScores.length>0?r.predictedScores[0].prob:'--';h+=`<div class="prediction-match-row"><span class="team-names"><strong>${r.homeTeam}</strong> vs <strong>${r.awayTeam}</strong></span><span class="match-date">📅 ${r.matchDate}</span><span class="cs-top">🎯 CS: ${ts} (${tp}%)</span><span class="primary-pick">🎯 ${pr}: ${Math.max(d1,d2).toFixed(1)}%</span><span class="ah-info">🌏 AH: H${r.predictedAsianHandicap?.homeCover||'--'}%</span><span class="status-badge badge-pending">⏳</span></div>`;});h+=`<div style="font-size:0.4rem;color:var(--muted);text-align:right;">Updated: ${new Date(ld.updatedAt).toLocaleTimeString()}</div></div>`;});c.innerHTML=h;}
+    function buildHC(r,ai){const p=r.status==='pending',w=r.status==='win',l=r.status==='loss';const cc=w?'win-card':l?'loss-card':'pending-card';const b=w?'<span class="status-badge badge-win">✅ WIN</span>':l?'<span class="status-badge badge-loss">❌ LOSS</span>':'<span class="status-badge badge-pending">⏳</span>';const fd=r.ftHome!=null?`<div class="hcard-ft-score">${r.ftHome}-${r.ftAway}</div>`:'<div>vs</div>';const pm=r.predictedMarkets||{},ah=r.predictedAsianHandicap||{},dc=r.predictedDoubleChance||{};let mk='';const items=[{k:'homeWin',l:'🏠 HOME',pr:pm.homeWin},{k:'draw',l:'🤝 DRAW',pr:pm.draw},{k:'awayWin',l:'✈️ AWAY',pr:pm.awayWin},{k:'over25',l:'O2.5',pr:pm.over25},{k:'under25',l:'U2.5',pr:pm.under25},{k:'over15',l:'O1.5',pr:pm.over15},{k:'bttsY',l:'BTTS Y',pr:pm.bttsY},{k:'bttsN',l:'BTTS N',pr:pm.bttsN},{k:'ahHome',l:`AH H-${ah.line||0.25}`,pr:ah.homeCover},{k:'ahAway',l:`AH A+${ah.line||0.25}`,pr:ah.awayCover},{k:'dc1X',l:'1X',pr:dc.homeOrDraw},{k:'dcX2',l:'X2',pr:dc.awayOrDraw}];mk=items.map(it=>`<div class="mkt-box mkt-pending"><div class="mkt-label">${it.l}</div><div class="mkt-prob">${it.pr||'--'}%</div></div>`).join('');const fl=`<div class="ft-logger"><span>FT:</span><input class="ft-input" id="ftH_${r.id}" value="${r.ftHome||''}" placeholder="H">-<input class="ft-input" id="ftA_${r.id}" value="${r.ftAway||''}" placeholder="A"><button class="btn-success btn-sm" onclick="saveFT(${r.id})">💾</button></div>`;return `<div class="history-card ${cc}"><div class="hcard-header"><div><div class="hcard-league">🏆 ${r.leagueName||'?'}</div><div class="hcard-datetime">📅 ${r.matchDate||'?'}</div></div><div style="display:flex;gap:0.3rem;">${b}<button class="btn-danger btn-sm" onclick="delH(${r.id})">🗑</button></div></div><div class="hcard-teams"><div class="hcard-team"><div class="hcard-team-logo">${(r.homeTeam||'?').charAt(0)}</div><div class="hcard-team-name">${r.homeTeam||'?'}</div></div><div class="hcard-score-vs">${fd}</div><div class="hcard-team"><div class="hcard-team-logo">${(r.awayTeam||'?').charAt(0)}</div><div class="hcard-team-name">${r.awayTeam||'?'}</div></div></div>${fl}<div style="margin-top:0.5rem"><div style="font-size:0.5rem;color:var(--neon-cyan);">💰 MARKETS</div><div class="market-results-grid">${mk}</div></div></div>`;}
 
-    async function renderHistoryCards(){const c=$('historyCardsList');if(!c)return;try{const all=await dbGetAll();let filtered=all;const s=($('historySearch')?.value||'').toLowerCase();if(s)filtered=filtered.filter(r=>r.homeTeam.toLowerCase().includes(s)||r.awayTeam.toLowerCase().includes(s));if(currentHistoryFilter==='wins')filtered=filtered.filter(r=>r.status==='win');else if(currentHistoryFilter==='losses')filtered=filtered.filter(r=>r.status==='loss');else if(currentHistoryFilter==='pending')filtered=filtered.filter(r=>r.status==='pending');const sorted=filtered.sort((a,b)=>b.timestamp-a.timestamp);$('historyCount').textContent=`${sorted.length} records`;if(!sorted.length){c.innerHTML='<div class="empty-history"><span class="empty-icon">📭</span>No history</div>';return;}c.innerHTML=sorted.map((r,i)=>buildHistoryCard(r,i)).join('');}catch(e){c.innerHTML='<div class="empty-history">⚠️ Error</div>';}}
-
-    function buildHistoryCard(r,ai){const p=r.status==='pending',w=r.status==='win',l=r.status==='loss',hw=r.status==='half-win';const cc=w?'win-card':hw?'half-win-card':l?'loss-card':'pending-card';const b=w?`<span class="status-badge badge-win">✅ WIN</span>`:hw?`<span class="status-badge badge-half-win">🟠 HALF</span>`:l?`<span class="status-badge badge-loss">❌ LOSS</span>`:`<span class="status-badge badge-pending">⏳</span>`;const fd=r.ftHome!=null?`<div class="hcard-ft-score ${w?'win-score':hw?'half-win-score':l?'loss-score':''}">${r.ftHome}-${r.ftAway}</div>`:`<div class="hcard-vs">vs</div>`;const mk=buildMarketResultBoxes(r),cs=buildCSBoxes(r);let pbl='';if(r.predictedDoubleChance){const d1=parseFloat(r.predictedDoubleChance.homeOrDraw||50),d2=parseFloat(r.predictedDoubleChance.awayOrDraw||50);pbl=`<span class="primary-bet-indicator">🎯 ${d1>=d2?'1X':'X2'}</span>`;}const ei=r.eloDiff!=null?`<div style="font-size:0.4rem;color:var(--neon-cyan);">⚡ Elo: ${r.eloDiff>0?'+':''}${r.eloDiff}</div>`:'';const fl=`<div class="ft-logger"><span style="font-size:0.5rem;">FT:</span><input class="ft-input" id="ftH_${r.id}" value="${r.ftHome||''}" placeholder="H">-<input class="ft-input" id="ftA_${r.id}" value="${r.ftAway||''}" placeholder="A"><button class="btn-success btn-sm" onclick="saveFT(${r.id})">💾</button></div>`;return `<div class="history-card ${cc}" style="animation-delay:${ai*0.05}s"><div class="hcard-header"><div><div class="hcard-league">🏆 ${r.leagueName||'?'}</div><div class="hcard-datetime">📅 ${r.matchDate}</div></div><div style="display:flex;gap:0.4rem;">${b}${pbl}<button class="expand-btn" onclick="toggleHC(${r.id})">▼</button><button class="btn-danger btn-sm" onclick="delH(${r.id})">🗑</button></div></div><div class="hcard-teams"><div class="hcard-team"><div class="hcard-team-logo">${r.homeTeam.charAt(0)}</div><div class="hcard-team-name">${r.homeTeam}</div></div><div class="hcard-score-vs">${fd}</div><div class="hcard-team"><div class="hcard-team-logo">${r.awayTeam.charAt(0)}</div><div class="hcard-team-name">${r.awayTeam}</div></div></div>${ei}${fl}<div class="hcard-details" id="hcd_${r.id}"><div style="margin-top:0.5rem"><div style="font-size:0.5rem;color:var(--neon-cyan);">🎯 CORRECT SCORES</div><div class="cs-grid">${cs}</div><div style="font-size:0.5rem;color:var(--neon-cyan);">💰 MARKETS</div><div class="market-results-grid">${mk}</div></div></div></div>`;}
-    function buildMarketResultBoxes(r){const pm=r.predictedMarkets||{},mr=r.marketResults||{},p=r.status==='pending';let items=[{k:'homeWin',l:'🏠 HOME',pr:pm.homeWin},{k:'draw',l:'🤝 DRAW',pr:pm.draw},{k:'awayWin',l:'✈️ AWAY',pr:pm.awayWin},{k:'over25',l:'O2.5',pr:pm.over25},{k:'under25',l:'U2.5',pr:pm.under25},{k:'over15',l:'O1.5',pr:pm.over15},{k:'bttsY',l:'BTTS Y',pr:pm.bttsY},{k:'bttsN',l:'BTTS N',pr:pm.bttsN}];if(r.predictedAsianHandicap){const ah=r.predictedAsianHandicap;items.push({k:'ahHome',l:`AH H-${ah.line}`,pr:ah.homeCover},{k:'ahAway',l:`AH A+${ah.line}`,pr:ah.awayCover});}if(r.predictedDoubleChance){const dc=r.predictedDoubleChance;items.push({k:'dc1X',l:'1X',pr:dc.homeOrDraw},{k:'dcX2',l:'X2',pr:dc.awayOrDraw});}return items.map(it=>{const st=mr[it.k];let cls='',bd='';if(p||st===undefined){cls='mkt-pending';bd='<span class="mkt-badge" style="background:#ffe600;color:#000">WAIT</span>';}else if(st===true){cls='mkt-win';bd='<span class="mkt-badge">WIN</span>';}else if(st==='push'){cls='mkt-push';bd='<span class="mkt-badge" style="background:#888;">PUSH</span>';}else{cls='mkt-loss';bd='<span class="mkt-badge">LOSS</span>';}return `<div class="mkt-box ${cls}"><div class="mkt-label">${it.l}</div><div class="mkt-prob">${it.pr||'--'}%</div>${bd}</div>`;}).join('');}
-    function buildCSBoxes(r){const ps=r.predictedScores||[];return ps.slice(0,4).map(s=>{let cls='',bd='';if(r.ftHome!=null){const hit=parseInt(s.home)===r.ftHome&&parseInt(s.away)===r.ftAway;cls=hit?'cs-hit':'cs-miss';bd=hit?'<div class="cs-result-badge" style="background:var(--win-color);color:#000">HIT!</div>':'<div class="cs-result-badge" style="background:var(--loss-color)">MISS</div>';}return `<div class="cs-box ${cls}"><div class="cs-score">${s.home}-${s.away}</div><div class="cs-pct">${s.prob}%</div>${bd}</div>`;}).join('');}
-
-    window.toggleHC=function(id){const d=document.getElementById(`hcd_${id}`);if(d)d.classList.toggle('expanded');};
-    window.delH=function(id){showConfirmModal('🗑️ Delete','Delete this record?',async()=>{await dbDelete(id);showToast('Deleted','success');renderHistoryCards();refreshAnalytics();});};
-    window.saveFT=async function(id){const hh=parseInt(document.getElementById(`ftH_${id}`)?.value),ha=parseInt(document.getElementById(`ftA_${id}`)?.value);if(isNaN(hh)||isNaN(ha)){showToast('❌ Enter scores','error');return;}const all=await dbGetAll();const r=all.find(x=>x.id===id);if(!r)return;r.ftHome=hh;r.ftAway=ha;const tg=hh+ha;r.marketResults={homeWin:hh>ha,draw:hh===ha,awayWin:hh<ha,over25:tg>2.5,under25:tg<=2.5,over15:tg>1.5,under15:tg<=1.5,bttsY:hh>0&&ha>0,bttsN:!(hh>0&&ha>0)};if(r.predictedAsianHandicap){const line=parseFloat(r.predictedAsianHandicap.line);r.asianHandicapResult=evaluateAsianHandicapResult(hh,ha,line);if(r.asianHandicapResult==='home_win'){r.marketResults.ahHome=true;r.marketResults.ahAway=false;}else if(r.asianHandicapResult==='away_win'){r.marketResults.ahHome=false;r.marketResults.ahAway=true;}else{r.marketResults.ahHome='push';r.marketResults.ahAway='push';}}if(r.predictedDoubleChance){r.doubleChanceResults={homeOrDraw:evaluateDoubleChanceResult(hh,ha,'home_or_draw'),awayOrDraw:evaluateDoubleChanceResult(hh,ha,'away_or_draw')};r.marketResults.dc1X=r.doubleChanceResults.homeOrDraw;r.marketResults.dcX2=r.doubleChanceResults.awayOrDraw;}const d1=parseFloat(r.predictedDoubleChance?.homeOrDraw||50),d2=parseFloat(r.predictedDoubleChance?.awayOrDraw||50);if(r.doubleChanceResults){r.status=d1>=d2?(r.doubleChanceResults.homeOrDraw?'win':'loss'):(r.doubleChanceResults.awayOrDraw?'win':'loss');}else{r.status=hh>ha?'win':hh<ha?'loss':'draw';}if(r.asianHandicapResult==='push'&&r.status==='loss')r.status='half-win';r.correctScoreHit=(r.predictedScores||[]).some(s=>parseInt(s.home)===hh&&parseInt(s.away)===ha);await dbUpdate(r);showToast('✅ Saved','success');renderHistoryCards();refreshAnalytics();};
-    function confirmClearHistory(){showConfirmModal('⚠️ Clear ALL','Delete ALL history?',async()=>{await dbClearAll();showToast('Cleared','success');renderHistoryCards();refreshAnalytics();});}
-    async function exportHistory(){const all=await dbGetAll();const j=JSON.stringify(all,null,2);const b=new Blob([j],{type:'application/json'});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download=`history_${Date.now()}.json`;a.click();URL.revokeObjectURL(u);showToast('Exported','success');}
-    async function importHistory(e){const f=e.target.files[0];if(!f)return;const t=await f.text();try{let arr=JSON.parse(t);if(arr.backup&&arr.data)arr=arr.data;if(!Array.isArray(arr)){showToast('Invalid','error');return;}let added=0;for(const r of arr){const{id,...rest}=r;await dbAdd(rest);added++;}showToast(`Imported ${added}`,'success');renderHistoryCards();refreshAnalytics();}catch(ex){showToast('Failed','error');}e.target.value='';}
-
-    async function refreshAnalytics(){const all=await dbGetAll();const comp=all.filter(r=>r.ftHome!=null);const w=comp.filter(r=>r.status==='win'),l=comp.filter(r=>r.status==='loss'),hw=comp.filter(r=>r.status==='half-win');const csH=comp.filter(r=>r.correctScoreHit===true);const og=$('analyticsOverviewGrid');if(og)og.innerHTML=[{i:'📊',v:all.length,l:'Total'},{i:'✅',v:w.length,l:'Wins',c:'win-val'},{i:'🟠',v:hw.length,l:'Half',c:'half-val'},{i:'❌',v:l.length,l:'Losses',c:'loss-val'},{i:'📈',v:comp.length?Math.round(w.length/comp.length*100)+'%':'0%',l:'Win Rate',c:'win-val'},{i:'🎯',v:comp.length?Math.round(csH.length/comp.length*100)+'%':'0%',l:'CS Rate'}].map(c=>`<div class="analytics-card"><div class="ac-icon">${c.i}</div><div class="ac-value ${c.c||''}">${c.v}</div><div class="ac-label">${c.l}</div></div>`).join('');const sg=$('streakGrid');if(sg){let cws=0,cls=0,mw=0,ml=0,tw=0,tl=0;const sorted=comp.sort((a,b)=>a.timestamp-b.timestamp);for(const r of sorted){if(r.status==='win'){tw++;tl=0;if(tw>mw)mw=tw;}else{tl++;tw=0;if(tl>ml)ml=tl;}}for(let i=sorted.length-1;i>=0;i--){if(sorted[i].status==='win')cws++;else break;}for(let i=sorted.length-1;i>=0;i--){if(sorted[i].status==='loss')cls++;else break;}sg.innerHTML=[{l:'Current Win Streak',v:cws,c:'win-streak'},{l:'Current Loss Streak',v:cls,c:'loss-streak'},{l:'Longest Win Streak',v:mw,c:'win-streak'},{l:'Longest Loss Streak',v:ml,c:'loss-streak'}].map(s=>`<div class="streak-card ${s.c}"><div class="streak-val">${s.v}</div><div class="streak-label">${s.l}</div></div>`).join('');}buildWinLossChart(all);}
-    function buildWinLossChart(records){const canvas=$('winLossChart');if(!canvas)return;if(winLossChartInst)winLossChartInst.destroy();const comp=records.filter(r=>r.ftHome!=null);const weeks={};comp.forEach(r=>{const d=new Date(r.timestamp);const wk=`W${Math.ceil((((d-new Date(d.getFullYear(),0,1))/86400000)+new Date(d.getFullYear(),0,1).getDay()+1)/7)}`;if(!weeks[wk])weeks[wk]={wins:0,losses:0};if(r.status==='win')weeks[wk].wins++;else weeks[wk].losses++;});const labels=Object.keys(weeks).slice(-8);winLossChartInst=new Chart(canvas,{type:'bar',data:{labels,datasets:[{label:'Wins',data:labels.map(l=>weeks[l]?.wins||0),backgroundColor:'rgba(0,207,255,0.5)',borderColor:'#00cfff',borderWidth:1},{label:'Losses',data:labels.map(l=>weeks[l]?.losses||0),backgroundColor:'rgba(255,34,68,0.4)',borderColor:'#ff2244',borderWidth:1}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#94a3b8'}}},scales:{x:{ticks:{color:'#94a3b8'}},y:{ticks:{color:'#94a3b8'}}}}});}
+    window.saveFT=async function(id){const hh=parseInt(document.getElementById(`ftH_${id}`)?.value),ha=parseInt(document.getElementById(`ftA_${id}`)?.value);if(isNaN(hh)||isNaN(ha)){showToast('❌ Enter scores','error');return;}const all=await dbAll();const r=all.find(x=>x.id===id);if(!r)return;r.ftHome=hh;r.ftAway=ha;const tg=hh+ha;r.marketResults={homeWin:hh>ha,draw:hh===ha,awayWin:hh<ha,over25:tg>2.5,under25:tg<=2.5,over15:tg>1.5,under15:tg<=1.5,bttsY:hh>0&&ha>0,bttsN:!(hh>0&&ha>0)};if(r.predictedAsianHandicap){const line=parseFloat(r.predictedAsianHandicap.line);r.asianHandicapResult=evalAH(hh,ha,line);if(r.asianHandicapResult==='home_win'){r.marketResults.ahHome=true;r.marketResults.ahAway=false;}else if(r.asianHandicapResult==='away_win'){r.marketResults.ahHome=false;r.marketResults.ahAway=true;}else{r.marketResults.ahHome='push';r.marketResults.ahAway='push';}}if(r.predictedDoubleChance){r.doubleChanceResults={homeOrDraw:evalDC(hh,ha,'home_or_draw'),awayOrDraw:evalDC(hh,ha,'away_or_draw')};r.marketResults.dc1X=r.doubleChanceResults.homeOrDraw;r.marketResults.dcX2=r.doubleChanceResults.awayOrDraw;}const d1=parseFloat(r.predictedDoubleChance?.homeOrDraw||50),d2=parseFloat(r.predictedDoubleChance?.awayOrDraw||50);if(r.doubleChanceResults){r.status=d1>=d2?(r.doubleChanceResults.homeOrDraw?'win':'loss'):(r.doubleChanceResults.awayOrDraw?'win':'loss');}else{r.status=hh>ha?'win':hh<ha?'loss':'draw';}await dbUpdate(r);showToast('✅ Saved','success');renderHistoryCards();refreshAnalytics();};
+    window.delH=function(id){if(confirm('Delete?')){dbDelete(id);showToast('Deleted','success');renderHistoryCards();refreshAnalytics();}};
+    function confirmClearHistory(){if(confirm('Clear ALL history?')){dbClear();showToast('Cleared','success');renderHistoryCards();refreshAnalytics();}}
+    async function exportHistory(){const all=await dbAll();const j=JSON.stringify(all,null,2);const b=new Blob([j],{type:'application/json'});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download=`history_${Date.now()}.json`;a.click();URL.revokeObjectURL(u);showToast('Exported','success');}
     function setHistoryFilter(f){currentHistoryFilter=f;document.querySelectorAll('.filter-btn').forEach(b=>b.classList.toggle('active',b.dataset.hf===f));renderHistoryCards();}
-    function setAsianLine(line){currentAsianLine=line;document.querySelectorAll('.asian-line-btn').forEach(b=>b.classList.toggle('active',parseFloat(b.dataset.line)===line));if(selHome&&selAway)calculateAll();}
 
-    async function saveCurrentToHistory(){if(!lastPred||!selHome||!selAway){showToast('No prediction','error');return;}const m=calcMarkets(lastPred.ensemble.scores),ah=lastPred.ensemble.asianHandicap,dc=lastPred.ensemble.doubleChance;const r={homeTeam:selHome.name,awayTeam:selAway.name,leagueName:currentLeagueName||'Manual',matchDate:new Date().toLocaleDateString(),matchTime:new Date().toLocaleTimeString(),predictedScores:lastPred.ensemble.scores.slice(0,4).map(s=>({home:s.home,away:s.away,prob:(s.prob*100).toFixed(1)})),predictedMarkets:{homeWin:(m.homeWin*100).toFixed(1),draw:(m.draw*100).toFixed(1),awayWin:(m.awayWin*100).toFixed(1),over25:(m.o25*100).toFixed(1),under25:(m.u25*100).toFixed(1),over15:(m.o15*100).toFixed(1),bttsY:(m.bttsY*100).toFixed(1),bttsN:(m.bttsN*100).toFixed(1)},predictedAsianHandicap:{line:ah.line,homeCover:(ah.homeCover*100).toFixed(1),awayCover:(ah.awayCover*100).toFixed(1)},predictedDoubleChance:{homeOrDraw:(dc.homeOrDraw*100).toFixed(1),awayOrDraw:(dc.awayOrDraw*100).toFixed(1)},xgHome:lastPred.xg.homeXG.toFixed(2),xgAway:lastPred.xg.awayXG.toFixed(2),eloDiff:lastPred.xg.eloDiff,ftHome:null,ftAway:null,status:'pending',marketResults:{},timestamp:Date.now(),savedTimestamp:new Date().toLocaleString()};await dbAdd(r);showToast('✅ Saved','success');renderHistoryCards();refreshAnalytics();}
-    window.saveAutoFixtureToHistory=async function(i){const f=upcomingFix[i];if(!f||!f._pred)return;lastPred=f._pred;selHome={name:f.home};selAway={name:f.away};await saveCurrentToHistory();};
+    async function refreshAnalytics(){const all=await dbAll();const comp=all.filter(r=>r.ftHome!=null);const w=comp.filter(r=>r.status==='win'),l=comp.filter(r=>r.status==='loss');const og=$('analyticsOverviewGrid');if(og)og.innerHTML=[{i:'📊',v:all.length,l:'Total'},{i:'✅',v:w.length,l:'Wins',c:'win-val'},{i:'❌',v:l.length,l:'Losses',c:'loss-val'},{i:'📈',v:comp.length?Math.round(w.length/comp.length*100)+'%':'0%',l:'Win Rate',c:'win-val'}].map(c=>`<div class="analytics-card"><div class="ac-icon">${c.i}</div><div class="ac-value ${c.c||''}">${c.v}</div><div class="ac-label">${c.l}</div></div>`).join('');const sg=$('streakGrid');if(sg){let cws=0,cls=0,mw=0,ml=0,tw=0,tl=0;const sorted=comp.sort((a,b)=>a.timestamp-b.timestamp);for(const r of sorted){if(r.status==='win'){tw++;tl=0;if(tw>mw)mw=tw;}else{tl++;tw=0;if(tl>ml)ml=tl;}}for(let i=sorted.length-1;i>=0;i--){if(sorted[i].status==='win')cws++;else break;}for(let i=sorted.length-1;i>=0;i--){if(sorted[i].status==='loss')cls++;else break;}sg.innerHTML=[{l:'Win Streak',v:cws,c:'win-streak'},{l:'Loss Streak',v:cls,c:'loss-streak'},{l:'Best Win',v:mw,c:'win-streak'},{l:'Worst Loss',v:ml,c:'loss-streak'}].map(s=>`<div class="streak-card ${s.c}"><div class="streak-val">${s.v}</div><div class="streak-label">${s.l}</div></div>`).join('');}}
+
+    function setAsianLine(line){currentAsianLine=line;document.querySelectorAll('.asian-line-btn').forEach(b=>b.classList.toggle('active',parseFloat(b.dataset.line)===line));if(selHome&&selAway)calculateAll();}
+    async function saveCurrentToHistory(){if(!lastPred||!selHome||!selAway){showToast('No prediction','error');return;}const m=calcMarkets(lastPred.ensemble.scores),ah=lastPred.ensemble.asianHandicap,dc=lastPred.ensemble.doubleChance;const r={homeTeam:selHome.name,awayTeam:selAway.name,leagueName:currentLeagueName||'Manual',matchDate:new Date().toLocaleDateString(),predictedScores:lastPred.ensemble.scores.slice(0,4).map(s=>({home:s.home,away:s.away,prob:(s.prob*100).toFixed(1)})),predictedMarkets:{homeWin:(m.homeWin*100).toFixed(1),draw:(m.draw*100).toFixed(1),awayWin:(m.awayWin*100).toFixed(1),over25:(m.o25*100).toFixed(1),under25:(m.u25*100).toFixed(1),over15:(m.o15*100).toFixed(1),bttsY:(m.bttsY*100).toFixed(1),bttsN:(m.bttsN*100).toFixed(1)},predictedAsianHandicap:{line:ah.line,homeCover:(ah.homeCover*100).toFixed(1),awayCover:(ah.awayCover*100).toFixed(1)},predictedDoubleChance:{homeOrDraw:(dc.homeOrDraw*100).toFixed(1),awayOrDraw:(dc.awayOrDraw*100).toFixed(1)},xgHome:lastPred.xg.homeXG.toFixed(2),xgAway:lastPred.xg.awayXG.toFixed(2),eloDiff:lastPred.xg.eloDiff,ftHome:null,ftAway:null,status:'pending',marketResults:{},timestamp:Date.now()};await dbAdd(r);showToast('✅ Saved','success');renderHistoryCards();refreshAnalytics();}
 
     window.refreshAllPredictions=refreshAllPredictions;
     window.fetchAutoLeagueData=fetchAutoLeagueData;
     window.autoPredictAll=autoPredictAll;
     window.fetchManualStandings=fetchManualStandings;
-    window.fetchRecentMatches=fetchRecentMatches;
-    window.parseManualTable=parseManualTable;
-    window.saveManualLeague=saveManualLeague;
-    window.autoCalibrate=autoCalibrate;
     window.calculateAll=calculateAll;
-    window.logManualResult=logManualResult;
-    window.logAutoResult=logAutoResult;
-    window.selfLearn=selfLearn;
     window.trainAndPredictTF=trainAndPredictTF;
     window.saveCurrentToHistory=saveCurrentToHistory;
     window.confirmClearHistory=confirmClearHistory;
     window.exportHistory=exportHistory;
-    window.importHistory=importHistory;
     window.setAsianLine=setAsianLine;
     window.setHistoryFilter=setHistoryFilter;
 
-    initUsers();initHistoryStorage();
+    initUsers();
+    if(!localStorage.getItem(HISTORY_KEY))localStorage.setItem(HISTORY_KEY,JSON.stringify([]));
+    if(!localStorage.getItem(PREDICTIONS_KEY))localStorage.setItem(PREDICTIONS_KEY,JSON.stringify({}));
+    if(!localStorage.getItem(COMPLETION_KEY))localStorage.setItem(COMPLETION_KEY,JSON.stringify({}));
     let su=JSON.parse(sessionStorage.getItem(SSK));
-    if(su){curUser=su;loadData();showApp();}else{$('authWrapper').classList.remove('hidden');$('predictorApp').classList.add('hidden');}
+    if(su){curUser=su;showApp();}else{$('authWrapper').classList.remove('hidden');$('predictorApp').classList.add('hidden');}
   </script>
 </body>
 </html>
