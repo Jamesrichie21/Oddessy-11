@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>THE LEGEND OF THE FUTURE JAMES'S CREATION · Ultimate Math Predictor v6.6 Complete</title>
+  <title>THE LEGEND OF THE FUTURE JAMES'S CREATION · Ultimate Math Predictor v6.7</title>
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -142,13 +142,15 @@
     .api-source-selector{display:flex;gap:0.3rem;flex-wrap:wrap}
     .api-source-btn{padding:0.2rem 0.5rem;border-radius:20px;border:1px solid rgba(0,255,255,0.2);background:transparent;color:var(--muted);font-family:'Rajdhani';font-size:0.6rem;cursor:pointer}
     .api-source-btn.active{background:rgba(0,255,255,0.12);color:var(--neon-cyan)}
+    .saved-league-item{display:inline-block;padding:0.25rem 0.6rem;margin:0.15rem;border-radius:20px;background:rgba(0,255,255,0.08);border:1px solid rgba(0,255,255,0.2);cursor:pointer;font-size:0.5rem;color:var(--neon-cyan)}
+    .saved-league-item:hover{background:rgba(0,255,255,0.2)}
   </style>
 </head>
 <body>
   <div class="toast-container" id="toastContainer"></div>
   <div id="authWrapper" style="min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px;background:#0a0a1a;position:fixed;inset:0;z-index:9000">
     <div style="width:100%;max-width:360px;background:rgba(10,10,30,0.85);backdrop-filter:blur(25px);border:1px solid rgba(0,255,255,0.2);border-radius:24px;padding:1.5rem;">
-      <div style="text-align:center;"><h1 style="font-size:1rem;">🧠 NEURAL PREDICTOR</h1><p style="color:#94a3b8;font-size:0.5rem;">v6.6 Complete · Nothing Excluded</p></div>
+      <div style="text-align:center;"><h1 style="font-size:1rem;">🧠 NEURAL PREDICTOR</h1><p style="color:#94a3b8;font-size:0.5rem;">v6.7 · Saved Leagues</p></div>
       <div style="display:flex;gap:0;margin:1rem 0;border-radius:40px;background:rgba(0,0,0,0.4);padding:2px;">
         <button class="auth-tab active" data-atab="login" style="flex:1;padding:0.45rem;border-radius:40px;font-family:'Orbitron';font-size:0.55rem;background:linear-gradient(135deg,rgba(0,255,255,0.2),rgba(255,0,200,0.1));color:white;">🔐 LOGIN</button>
         <button class="auth-tab" data-atab="register" style="flex:1;padding:0.45rem;border-radius:40px;font-family:'Orbitron';font-size:0.55rem;background:transparent;color:#94a3b8;">📝 REGISTER</button>
@@ -160,7 +162,7 @@
   <div id="predictorApp" class="hidden" style="width:100%">
     <button id="appLogoutBtn" class="logout-btn">⤀ LOGOUT</button>
     <div class="main-container">
-      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;"><div><h1>🧠 THE LEGEND OF THE FUTURE JAMES'S CREATION</h1><p class="subtitle">v6.6 Complete · All Features Working</p></div><div style="display:flex;gap:0.4rem;"><span class="user-badge">👤 <span id="currentUserDisplay"></span></span><span id="autoScanStatus" class="auto-scan-status">✅ Ready</span></div></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;"><div><h1>🧠 THE LEGEND OF THE FUTURE JAMES'S CREATION</h1><p class="subtitle">v6.7 · Saved Leagues + Full Features</p></div><div style="display:flex;gap:0.4rem;"><span class="user-badge">👤 <span id="currentUserDisplay"></span></span><span id="autoScanStatus" class="auto-scan-status">✅ Ready</span></div></div>
       <div class="page-menu">
         <button class="page-menu-btn" data-page="predictions">🔮 PREDICTIONS</button>
         <button class="page-menu-btn" data-page="auto">📡 AUTO PREDICT</button>
@@ -178,6 +180,7 @@
           <div class="api-source-selector"><button class="api-source-btn active" data-msrc="football-data">Football-Data</button><button class="api-source-btn" data-msrc="manual">📝 Manual</button></div>
           <div class="input-row"><div class="input-group"><label>🏆 COMP</label><select id="manualCompSelect"><option value="">-- Select --</option><option value="WC">🌍 WC</option><option value="CL">🇪🇺 CL</option><option value="BL1">🇩🇪 BL</option><option value="DED">🇳🇱 ED</option><option value="BSA">🇧🇷 BSA</option><option value="PD">🇪🇸 PD</option><option value="FL1">🇫🇷 L1</option><option value="ELC">🏴󠁧󠁢󠁥󠁮󠁧󠁿 ELC</option><option value="PPL">🇵🇹 PPL</option><option value="EC">🇪🇺 EC</option><option value="SA">🇮🇹 SA</option><option value="PL">🏴󠁧󠁢󠁥󠁮󠁧󠁿 PL</option></select></div><button class="btn-primary btn-sm" onclick="fetchManualStandings()">📡 FETCH</button></div>
           <div id="manualInputSection" class="hidden"><textarea id="manualTableInput" rows="4" placeholder="Paste table: | Pos | Team | P | W | D | L | GLS | PTS |" style="width:100%;margin-top:0.3rem;"></textarea><div class="input-row"><input type="text" id="manualLeagueName" placeholder="League name" style="flex:1"><button class="btn-warning btn-sm" onclick="parseManualTable()">📋 PARSE</button><button class="btn-success btn-sm" onclick="saveManualLeague()">💾 SAVE</button></div><div id="manualParseMsg" style="font-size:0.45rem;margin-top:0.2rem;"></div></div>
+          <div id="savedLeaguesSection" style="margin-top:0.4rem;font-size:0.5rem;"></div>
           <div id="standingsPreview" style="font-size:0.45rem;margin-top:0.2rem;"></div>
         </div>
         <div class="section"><div class="input-row"><div class="input-group"><label>⚽ AVG G/M</label><input id="computedAvg" readonly value="2.75" style="width:55px;"></div><div class="input-group"><label>🏠 HA</label><input type="number" id="homeAdvInput" step="0.05" value="1.18" style="width:55px;"></div><div class="input-group"><label>📊 FORM WT</label><input type="number" id="formWeightInput" step="0.05" value="0.60" style="width:50px;"></div><button class="btn-sm" onclick="autoCalibrate()">🔧 AUTO</button></div></div>
@@ -194,11 +197,11 @@
       <div id="historyPage" class="page-content hidden"><div class="section"><div class="history-page-header"><input type="text" class="search-bar" id="historySearch" placeholder="🔍 Search..." oninput="renderHC()"></div><div class="filter-strip"><button class="filter-btn active" data-hf="all" onclick="setHF('all')">All</button><button class="filter-btn" data-hf="wins" onclick="setHF('wins')">✅ Wins</button><button class="filter-btn" data-hf="losses" onclick="setHF('losses')">❌ Losses</button><button class="filter-btn" data-hf="pending" onclick="setHF('pending')">⏳ Pending</button></div><div class="data-mgmt-row"><button class="btn-success btn-sm" onclick="exportHistory()">⬇️ EXPORT</button><button class="btn-danger btn-sm" onclick="confirmClearHistory()">🗑️ CLEAR</button></div><div id="historyCount" style="font-size:0.5rem;color:var(--muted);text-align:center;"></div></div><div id="historyCardsList"></div></div>
       <!-- ANALYTICS -->
       <div id="analyticsPage" class="page-content hidden"><div class="section"><h3>📊 OVERVIEW</h3><div class="analytics-grid" id="analyticsOverviewGrid"></div></div><div class="section"><h3>🔥 STREAKS</h3><div class="streak-grid" id="streakGrid"></div></div><div class="section"><h3>📈 CHARTS</h3><div class="chart-wrapper" style="height:200px"><canvas id="winLossChart"></canvas></div></div></div>
-      <div class="note">🧠 v6.6 Complete · All prediction cards, heatmap, markets, manual parsing, history, analytics.</div>
+      <div class="note">🧠 v6.7 · Saved Leagues · All Features Intact</div>
     </div>
   </div>
   <script>
-    const USK='jnp11_shared_users',SSK='jnp11_session',HK='jnp11_shared_history',PK='jnp11_shared_predictions',CK='jnp11_shared_completion';
+    const USK='jnp11_shared_users',SSK='jnp11_session',HK='jnp11_shared_history',PK='jnp11_shared_predictions',CK='jnp11_shared_completion',LLK='jnp11_shared_leagues';
     let curUser=null,allTeams=[],selHome=null,selAway=null,lastPred=null,lastXG=null,tfModel=null,tfTrained=false;
     let lw={homeAdv:1.18,eloBlendW:0.12},currentAsianLine=0.25;
     let upcomingFix=[],currentHF='all',currentLeagueName='',manSrc='football-data';
@@ -226,7 +229,7 @@
     function calcDC(hp,dp,ap){return{homeOrDraw:hp+dp,awayOrDraw:ap+dp};}
     function evalAH(hs,as,l){let ah=hs-l;if(ah>as)return'home_win';if(ah<as)return'away_win';return'push';}
     function evalDC(hs,as,bt){const hw=hs>as,d=hs===as,aw=hs<as;if(bt==='home_or_draw')return hw||d;if(bt==='away_or_draw')return aw||d;return false;}
-    async function showApp(){$('authWrapper').classList.add('hidden');$('predictorApp').classList.remove('hidden');$('currentUserDisplay').innerText=curUser?.username;renderHC();refreshAnalytics();renderPP();$('autoScanStatus').textContent='✅ Ready';updateSP();startAR();}
+    async function showApp(){$('authWrapper').classList.add('hidden');$('predictorApp').classList.remove('hidden');$('currentUserDisplay').innerText=curUser?.username;refreshSavedLeagues();renderHC();refreshAnalytics();renderPP();$('autoScanStatus').textContent='✅ Ready';updateSP();startAR();}
     function logout(){sessionStorage.removeItem(SSK);curUser=null;$('predictorApp').classList.add('hidden');$('authWrapper').classList.remove('hidden');if(ri)clearInterval(ri);if(ci)clearInterval(ci);}
     document.querySelectorAll('.auth-tab').forEach(t=>t.addEventListener('click',function(){document.querySelectorAll('.auth-tab').forEach(b=>{b.style.background='transparent';b.style.color='#94a3b8';});this.style.background='linear-gradient(135deg,rgba(0,255,255,0.2),rgba(255,0,200,0.1))';this.style.color='white';$('loginForm').style.display=this.dataset.atab==='login'?'block':'none';$('registerForm').style.display=this.dataset.atab==='register'?'block':'none';}));
     $('loginBtn').addEventListener('click',login);$('registerBtn').addEventListener('click',reg);$('appLogoutBtn').addEventListener('click',logout);
@@ -260,7 +263,13 @@
     function populateSelectors(){let o='<option value="">-- Select --</option>';allTeams.forEach(t=>o+=`<option value="${t.name}">${t.name}</option>`);$('homeSelect').innerHTML=o;$('awaySelect').innerHTML=o;}
     function autoCalibrate(){let m={WC:1.15,CL:1.2,BL1:1.22,DED:1.2,BSA:1.14,PD:1.18,FL1:1.19,ELC:1.16,PPL:1.17,EC:1.15,SA:1.16,PL:1.2};let c=$('manualCompSelect').value;if(m[c])$('homeAdvInput').value=m[c];}
     function parseManualTable(){let raw=$('manualTableInput').value;if(!raw)return;let lines=raw.split('\n');allTeams=[];for(let line of lines){let parts=line.split('|').map(s=>s.trim()).filter(s=>s);if(parts.length<8)continue;let gls=parts[6].split(':');if(gls.length<2)continue;let gf=parseInt(gls[0]),ga=parseInt(gls[1]),p=parseInt(parts[2]);allTeams.push({name:parts[1],played:p,won:parseInt(parts[3]),draw:parseInt(parts[4]),lost:parseInt(parts[5]),gf,ga,gd:gf-ga,points:parseInt(parts[7]),position:parseInt(parts[0]),recentGF:gf/Math.max(1,p),recentGA:ga/Math.max(1,p)});}if(allTeams.length){populateSelectors();$('manualParseMsg').innerHTML='✅ Parsed '+allTeams.length+' teams';let tg=allTeams.reduce((s,t)=>s+t.gf,0),tm=allTeams.reduce((s,t)=>s+t.played,0)/2;$('computedAvg').value=(tg/Math.max(1,tm)).toFixed(2);}}
-    function saveManualLeague(){let name=$('manualLeagueName').value.trim(),raw=$('manualTableInput').value;if(!name||!raw)return;let leagues=JSON.parse(localStorage.getItem('jnp11_shared_leagues')||'{}');leagues[name]={raw,teams:allTeams,date:Date.now()};localStorage.setItem('jnp11_shared_leagues',JSON.stringify(leagues));$('manualParseMsg').innerHTML='✅ Saved!';}
+
+    function saveManualLeague(){let name=$('manualLeagueName').value.trim(),raw=$('manualTableInput').value;if(!name||!raw||!allTeams.length)return;let leagues=JSON.parse(localStorage.getItem(LLK)||'{}');leagues[name]={raw,teams:allTeams,date:Date.now()};localStorage.setItem(LLK,JSON.stringify(leagues));$('manualParseMsg').innerHTML='✅ Saved!';refreshSavedLeagues();}
+
+    function refreshSavedLeagues(){let sec=$('savedLeaguesSection');if(!sec)return;let leagues=JSON.parse(localStorage.getItem(LLK)||'{}');let keys=Object.keys(leagues);if(!keys.length){sec.innerHTML='';return;}sec.innerHTML='<span style="color:var(--neon-cyan);">📁 Saved:</span> '+keys.map(k=>`<span class="saved-league-item" onclick="loadSavedLeague('${k.replace(/'/g,"\\'")}')">${k}</span>`).join(' ')+' <span class="saved-league-item" onclick="deleteAllLeagues()" style="color:var(--neon-red);">🗑 Clear</span>';}
+
+    window.loadSavedLeague=function(name){let leagues=JSON.parse(localStorage.getItem(LLK)||'{}');let data=leagues[name];if(data){allTeams=data.teams;populateSelectors();$('manualTableInput').value=data.raw;$('computedAvg').value=(allTeams.reduce((s,t)=>s+t.gf,0)/(allTeams.reduce((s,t)=>s+t.played,0)/2)).toFixed(2);currentLeagueName=name;$('standingsPreview').innerHTML=`✅ Loaded: ${name}`;selHome=selAway=null;}};
+    window.deleteAllLeagues=function(){if(confirm('Delete all saved leagues?')){localStorage.removeItem(LLK);refreshSavedLeagues();}};
 
     async function fetchAutoLeagueData(co=null){const comp=co||$('autoCompSelect').value;if(!comp)return null;const sel=$('autoStatus');if(sel)sel.innerHTML='<span class="spinner"></span> Loading...';try{let data=await apiFetch('football-data',`/competitions/${comp}/standings`);allTeams=[];(data.standings[0]?.table||[]).forEach(e=>{let gf=e.goalsFor,ga=e.goalsAgainst,p=e.playedGames;allTeams.push({name:e.team.name,played:p,won:e.won,draw:e.draw,lost:e.lost,gf,ga,gd:e.goalDifference,points:e.points,position:e.position,recentGF:gf/Math.max(1,p),recentGA:ga/Math.max(1,p)});});currentLeagueName=data.competition?.name||comp;let tg=allTeams.reduce((s,t)=>s+t.gf,0),tm=allTeams.reduce((s,t)=>s+t.played,0)/2;$('computedAvg').value=(tg/Math.max(1,tm)).toFixed(2);if(sel)sel.innerHTML='<span class="spinner"></span> Fetching fixtures...';let fd=await apiFetch('football-data',`/competitions/${comp}/matches?status=SCHEDULED&limit=12`);upcomingFix=fd.matches.map(m=>({home:m.homeTeam.name,away:m.awayTeam.name,date:m.utcDate}));if(!co)renderFixtures();if(sel)sel.innerHTML=`✅ ${currentLeagueName}: ${upcomingFix.length} fixtures`;return{comp,fixtures:upcomingFix,leagueName:currentLeagueName};}catch(e){if(sel)sel.innerHTML='❌ Error';return null;}}
     function renderFixtures(){let c=$('fixtureList');if(!c||!upcomingFix.length)return;c.innerHTML=upcomingFix.map((f,i)=>`<div class="fixture-item"><div class="fixture-header"><div><strong>${f.home}</strong> vs <strong>${f.away}</strong><div class="fixture-date">📅 ${new Date(f.date).toLocaleString()}</div></div><button class="btn-primary btn-sm" onclick="predictAutoFull(${i})">🔮 FULL PREDICT</button></div><div id="fixpred-${i}"></div></div>`).join('');}
